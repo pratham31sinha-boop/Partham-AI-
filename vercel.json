@@ -1,7 +1,10 @@
 {
   "version": 2,
   "cleanUrls": true,
-  "routes": [
-    { "src": "/(.*)", "dest": "/pratham-ai.html" }
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/pratham-ai.html"
+    }
   ]
 }
