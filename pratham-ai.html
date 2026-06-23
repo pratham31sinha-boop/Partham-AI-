@@ -6,6 +6,7 @@
 <title>Pratham AI — Production Suite</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
 <style>
   :root{
     --bg:#f6f3ec;
@@ -21,13 +22,14 @@
     --overlay: rgba(44, 42, 38, 0.4);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
-  html,body{height:100%; margin:0; padding:0; overflow:hidden;}
+  /* FIX: Mobile viewport scaling fix */
+  html,body{height:100dvh; margin:0; padding:0; overflow:hidden;}
   body{
     font-family:'Inter', sans-serif;
     background:var(--bg);
     color:var(--text);
     display:flex;
-    min-height:100vh;
+    min-height:100dvh;
     position: relative;
   }
 
@@ -108,16 +110,15 @@
   .connect-panel-inner input, .connect-panel-inner textarea { width:100%; padding:10px; border:1px solid var(--border); border-radius:7px; font-size:13px; margin-bottom:8px; background:var(--panel); color:var(--text); }
   .connect-panel-inner button{ width:100%; padding:10px; background:var(--accent); border:none; border-radius:7px; color:#fff; font-size:13px; font-weight:600; cursor:pointer; min-height: 44px; }
 
-  /* Fix: Lock down the main view to prevent browser viewport stretching */
-  .main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
+  /* Main Viewport Layout Fix */
+  .main{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    min-width:0;
     position: relative;
-    height: 100vh; /* Strictly lock to viewport height */
+    height: 100dvh;
   }
-
   .topbar{
     display:flex;
     align-items:center;
@@ -134,17 +135,15 @@
     display: flex; align-items: center; justify-content: center;
   }
 
-  /* Fix: Allow smooth inertia scrolling on iOS and Android */
-  .chat-scroll {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    justify-content: center;
+  .chat-scroll{
+    flex:1;
+    overflow-y:auto;
+    display:flex;
+    justify-content:center;
     width: 100%;
-    padding-bottom: 110px; /* Make space so text doesn't hide behind input box */
-    -webkit-overflow-scrolling: touch; /* Smooth iOS momentum scrolling */
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 120px; /* Space for the floating input box */
   }
-
   .chat-col{
     width:100%;
     max-width:720px;
@@ -153,7 +152,6 @@
     flex-direction:column;
     gap:20px;
   }
-  
   .empty-state{ margin:auto; text-align:center; color:var(--text-dim); padding:40px 16px; }
   .empty-state h1{ font-family:'Source Serif 4', serif; font-weight:600; font-size:24px; color:var(--text); margin:0 0 10px; }
   .empty-state p { font-size: 14px; line-height: 1.5; }
@@ -162,8 +160,8 @@
   .msg-row{display:flex; width: 100%;}
   .msg-row.user{justify-content:flex-end;}
   .msg{
-    max-width:85%;
-    padding:12px 16px;
+    max-width:90%;
+    padding:14px 18px;
     border-radius:16px;
     font-size:15px;
     line-height:1.6;
@@ -172,16 +170,41 @@
     overflow-wrap: break-word;
     position: relative;
   }
-  .msg p { margin: 0 0 8px 0; }
-  .msg p:last-child { margin-bottom: 0; }
   
+  /* FIX: Markdown & Code Formatting */
+  .msg p { margin: 0 0 10px 0; }
+  .msg p:last-child { margin-bottom: 0; }
+  .msg code {
+    background: rgba(0,0,0,0.06);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 13.5px;
+  }
+  .msg pre {
+    background: #282c34;
+    color: #abb2bf;
+    padding: 16px;
+    border-radius: 10px;
+    overflow-x: auto;
+    margin: 12px 0;
+    -webkit-overflow-scrolling: touch;
+  }
+  .msg pre code {
+    background: transparent;
+    padding: 0;
+    color: inherit;
+    font-size: 13.5px;
+  }
   .msg table { display: block; border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 14px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .msg th, .msg td { border: 1px solid var(--border); padding: 10px; text-align: left; min-width: 100px; }
   .msg th { background-color: var(--sidebar); font-weight: 600; }
 
   .msg-row.user .msg{ background:var(--bubble-user); border-bottom-right-radius:4px; }
   .msg-row.model .msg{ background:var(--bubble-model); border:1px solid var(--border); border-bottom-left-radius:4px; }
-  .msg-row.system .msg{ background:#f6e7e0; border:1px solid #e3c1ae; color:#8a4a2e; font-size:13px; border-radius: 8px; }
+  
+  /* System logs are now hidden but kept in CSS for errors */
+  .msg-row.system { display: none; }
   
   .feedback-bar { display: flex; gap: 8px; padding-left: 12px; margin-top: -2px; }
   .feedback-btn { background: none; border: none; cursor: pointer; font-size: 14px; opacity: 0.35; padding: 4px; min-width: 32px; min-height: 32px; transition: opacity 0.2s, transform 0.1s; }
@@ -197,15 +220,18 @@
   }
   @keyframes textCaretBlink { 50% { opacity: 0; } }
 
-  /* Fix: Remove the absolute positioning from the bottom input box wrapper */
-  .composer-wrap {
-    position: relative; /* Change from absolute to relative to sit nicely below the scroll window */
-    padding: 12px 16px 20px;
-    background: var(--bg);
+  .composer-wrap{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display:flex;
+    justify-content:center;
+    padding:12px 16px 20px;
+    background: linear-gradient(to top, var(--bg) 70%, transparent);
     z-index: 30;
   }
-  
-  .composer{ width:100%; max-width:720px; margin: 0 auto; display:flex; align-items:flex-end; gap:8px; background:var(--panel); border:1px solid var(--border); border-radius:24px; padding:6px 6px 6px 16px; box-shadow:0 2px 8px rgba(0,0,0,0.05); }
+  .composer{ width:100%; max-width:720px; margin: 0 auto; display:flex; align-items:flex-end; gap:8px; background:var(--panel); border:1px solid var(--border); border-radius:24px; padding:6px 6px 6px 16px; box-shadow:0 4px 12px rgba(0,0,0,0.06); }
   .composer textarea{ flex:1; border:none; outline:none; resize:none; font-family:'Inter', sans-serif; font-size:15px; line-height:1.5; max-height:120px; padding:10px 0; background:transparent; color:var(--text); }
   .composer button{ background:var(--accent); border:none; color:#fff; width:38px; height:36px; border-radius:50%; font-size:16px; cursor:pointer; flex-shrink:0; display: flex; align-items: center; justify-content: center; }
   .composer button:disabled{background:#d8cfc0; cursor:not-allowed;}
@@ -239,11 +265,6 @@
   .status-badge.online { background: #e2f0d9; color: #385723; }
   .status-badge.offline { background: #fce4d6; color: #c65911; }
 
-  .health-row { display: flex; align-items: center; justify-content: space-between; font-size: 12px; padding: 8px 4px; border-bottom: 1px solid var(--border); }
-  .health-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-  .health-dot.up { background: #5d8a5a; }
-  .health-dot.down { background: #c2613f; }
-
   @media (max-width: 760px){
     .sidebar{
       position:fixed;
@@ -255,7 +276,7 @@
       transform: translateX(0);
       box-shadow:4px 0 24px rgba(44,42,38,0.15);
     }
-    .msg { max-width: 90%; }
+    .msg { max-width: 95%; }
     .chat-col { padding: 16px 12px 20px; gap: 16px; }
     .admin-grid { grid-template-columns: 1fr 1fr; }
     .stat-card { padding: 12px; }
@@ -297,15 +318,6 @@
         <div class="connect-panel-inner">
           <input type="text" id="endpointInput" placeholder="https://your-server.com">
           <button id="connectBtn">Connect Backend</button>
-          
-          <div style="font-size:10px; font-weight:600; text-transform:uppercase; color:var(--text-dim); margin: 10px 0 6px 2px; letter-spacing: 0.05em;">Active Cluster Rings</div>
-          <div id="sidebarHealthStatus" style="max-height: 110px; overflow-y: auto; margin-bottom:12px;"></div>
-
-          <textarea id="teachInput" rows="2" placeholder="Teach Pratham user preference context..."></textarea>
-          <button id="teachBtn" style="background:#5d8a5a;">Teach AI</button>
-          
-          <textarea id="improveInput" rows="2" placeholder="Suggest pipeline updates..."></textarea>
-          <button id="improveBtn" style="background:var(--text);">Submit Suggestion</button>
         </div>
       </div>
     </div>
@@ -315,7 +327,7 @@
     <div class="topbar">
       <div class="topbar-left">
         <button class="menu-btn" id="menuBtn" title="Open Sidebar">☰</button>
-        <div class="brand" style="padding:0; font-size:16px;">Pratham AI Console</div>
+        <div class="brand" style="padding:0; font-size:16px;">Pratham AI</div>
       </div>
       <button class="admin-toggle-btn" id="adminToggleBtn" style="display:none;">Admin Control</button>
     </div>
@@ -323,8 +335,8 @@
     <div class="chat-scroll" id="chatScrollContainer">
       <div class="chat-col" id="chatCol">
         <div class="empty-state">
-          <h1>What can I help with?</h1>
-          <p>Please login using Google Identity Services to sync your cross-device communication streams securely.</p>
+          <h1>How can I help you today?</h1>
+          <p>Sign in to sync your conversations.</p>
         </div>
       </div>
     </div>
@@ -365,7 +377,9 @@
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+
 <script>
   let apiUrl = localStorage.getItem('pratham_api_url') || 'https://partham-ai.onrender.com';
   let idToken = localStorage.getItem('pratham_id_token') || 'sandbox-master-token-local-dev-use';
@@ -380,7 +394,18 @@
   const fileInput = document.getElementById('fileInput');
 
   if(apiUrl) document.getElementById('endpointInput').value = apiUrl;
-  if (typeof marked !== 'undefined') { marked.setOptions({ breaks: true, gfm: true }); }
+
+  // FIX: Configure Marked.js to format code blocks identically to ChatGPT
+  if (typeof marked !== 'undefined') { 
+    marked.setOptions({ 
+      breaks: true, 
+      gfm: true,
+      highlight: function(code, lang) {
+        const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+        return hljs.highlight(code, { language }).value;
+      }
+    }); 
+  }
 
   function closeSidebar() { sidebar.classList.remove('open'); backdrop.classList.remove('active'); }
   function openSidebar() { sidebar.classList.add('open'); backdrop.classList.add('active'); }
@@ -390,9 +415,7 @@
   sidebar.addEventListener('click', (e) => { e.stopPropagation(); });
 
   window.addEventListener("resize", () => {
-    if (window.innerWidth > 760) {
-      closeSidebar();
-    }
+    if (window.innerWidth > 760) { closeSidebar(); }
   });
 
   window.onload = function () {
@@ -418,7 +441,6 @@
       if(apiUrl) {
         await syncConversations();
         await checkAdminPrivileges();
-        await loadSidebarHealthSummary();
       }
     } catch(e) { clearAuth(); }
   }
@@ -463,18 +485,8 @@
     apiUrl = document.getElementById('endpointInput').value.trim().replace(/\/$/, '');
     localStorage.setItem('pratham_api_url', apiUrl);
     setStatus(!!apiUrl && !!idToken);
-    if(apiUrl && idToken) { await syncConversations(); await checkAdminPrivileges(); await loadSidebarHealthSummary(); }
+    if(apiUrl && idToken) { await syncConversations(); await checkAdminPrivileges(); }
   });
-
-  async function loadSidebarHealthSummary() {
-    try {
-      const res = await makeRequest(`${apiUrl}/providers/health`);
-      const data = await res.json();
-      document.getElementById('sidebarHealthStatus').innerHTML = data.map(p => `
-        <div class="health-row"><span>${p.name}</span><span class="health-dot ${p.is_online ? 'up' : 'down'}"></span></div>
-      `).join('');
-    } catch(e){}
-  }
 
   async function syncConversations() {
     if(!apiUrl) return;
@@ -508,24 +520,17 @@
   document.getElementById('newChatBtn').addEventListener('click', () => {
     activeConvoId = null;
     document.getElementById('chatCol').innerHTML = `
-      <div class="empty-state"><h1>New Sync Runtime Matrix</h1><p>Send a token to open a Google account isolated data storage loop stream.</p></div>
+      <div class="empty-state"><h1>New Conversation</h1><p>Send a message to start.</p></div>
     `;
     Array.from(document.getElementById('convoList').children).forEach(el => el.classList.remove('active'));
     closeSidebar(); 
   });
 
-  document.getElementById('teachBtn').addEventListener('click', async () => {
-    const el = document.getElementById('teachInput'); const fact = el.value.trim(); if(!fact || !apiUrl) return;
-    try { const res = await makeRequest(`${apiUrl}/memory/add`, { method: 'POST', body: JSON.stringify({ fact }) }); if(res.ok) { addMessage('system', `Memory Cell Anchored: "${fact}"`); el.value = ''; } } catch(e){}
-  });
-
-  document.getElementById('improveBtn').addEventListener('click', async () => {
-    const el = document.getElementById('improveInput'); const suggestion = el.value.trim(); if(!suggestion || !apiUrl) return;
-    try { const res = await makeRequest(`${apiUrl}/improve`, { method: 'POST', body: JSON.stringify({ suggestion }) }); if(res.ok) { addMessage('system', 'System optimization task pushed to administration monitor loop review stack.'); el.value = ''; } } catch(e){}
-  });
-
   function addMessage(role, text, messageId = null, feedbackRating = null) {
     const currentEmpty = chatCol.querySelector('.empty-state'); if (currentEmpty) currentEmpty.remove();
+    
+    // Ignore displaying the system routing messages entirely to keep UX clean
+    if (role === 'system') return;
     
     const container = document.createElement('div'); container.className = 'msg-container';
     const row = document.createElement('div'); row.className = `msg-row ${role}`;
@@ -542,7 +547,7 @@
       const up = document.createElement('button'); up.className = `feedback-btn ${feedbackRating === 1 ? 'active' : ''}`; up.textContent = '👍';
       up.addEventListener('click', () => sendFeedback(messageId, 1, up, down));
       const down = document.createElement('button'); down.className = `feedback-btn ${feedbackRating === -1 ? 'active' : ''}`; down.textContent = '👎';
-      up.addEventListener('click', () => sendFeedback(messageId, -1, up, down));
+      down.addEventListener('click', () => sendFeedback(messageId, -1, up, down));
       bar.appendChild(up); bar.appendChild(down); container.appendChild(bar);
     }
     
@@ -562,8 +567,6 @@
   async function handleSend() {
     const text = input.value.trim();
     if (!text || busy) return;
-    
-    if (!idToken) { addMessage('system', 'Action Blocked: Google authentication entity required.'); return; }
     
     busy = true;
     sendBtn.disabled = true;
@@ -585,7 +588,6 @@
     scrollWrap.scrollTop = scrollWrap.scrollHeight;
 
     let assistantChunkAccumulator = "";
-    let linkedProviderToken = "";
 
     try {
       const response = await fetch(`${apiUrl}/chat-stream`, {
@@ -611,7 +613,7 @@
             activeConvoId = parseInt(line.split(":")[1]);
             await syncConversations();
           } else if (line.startsWith("PROVIDER:")) {
-            linkedProviderToken = line.split(":")[1];
+             // System implicitly ignores provider UI display per instructions
           } else if (line !== "") {
             assistantChunkAccumulator += line;
             textBubbleNode.textContent = assistantChunkAccumulator;
@@ -622,12 +624,11 @@
 
       const finalizedHtml = typeof marked !== 'undefined' ? marked.parse(assistantChunkAccumulator) : assistantChunkAccumulator;
       textBubbleNode.innerHTML = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(finalizedHtml) : finalizedHtml;
-      
       textBubbleNode.classList.remove('streaming-cursor');
-      if (linkedProviderToken) { addMessage('system', `Routing Gateway Node Cluster: ${linkedProviderToken}`); }
+      
     } catch (err) {
       textBubbleNode.classList.remove('streaming-cursor');
-      textBubbleNode.textContent = `Streaming pipeline fault tracking trace error: ${err.message}`;
+      textBubbleNode.textContent = `Sorry, I encountered a communication error: ${err.message}`;
     }
 
     busy = false;
@@ -638,15 +639,15 @@
   fileInput.addEventListener('change', async () => {
     const file = fileInput.files[0]; 
     if (!file) return;
-    if (!activeConvoId) { addMessage('system', 'Action Blocked: Select conversation stream before linking files.'); return; }
+    if (!activeConvoId) { alert("Please send a message to start the conversation before attaching a file."); return; }
     
-    const chip = document.createElement('div'); chip.className = 'attachment-chip'; chip.textContent = `📎 Injecting context: ${file.name}…`; chatCol.appendChild(chip);
+    const chip = document.createElement('div'); chip.className = 'attachment-chip'; chip.textContent = `📎 Uploading: ${file.name}…`; chatCol.appendChild(chip);
     const form = new FormData(); form.append('file', file); form.append('conversation_id', activeConvoId);
     try {
       const res = await fetch(`${apiUrl}/upload`, { method: 'POST', body: form, headers: { 'Authorization': `Bearer ${idToken}` } });
       const data = await res.json(); if(!res.ok) throw new Error(data.error);
-      chip.textContent = `📎 Mounted block context stream reference element: ${data.filename}`;
-    } catch(e) { chip.textContent = `📎 Injection failure error: ${e.message}`; }
+      chip.textContent = `📎 Attached: ${data.filename}`;
+    } catch(e) { chip.textContent = `📎 Upload failed: ${e.message}`; }
   });
 
   const adminToggle = document.getElementById('adminToggleBtn'); const adminView = document.getElementById('adminView');
@@ -657,10 +658,10 @@
     try {
       const resStats = await makeRequest(`${apiUrl}/admin/stats`); const stats = await resStats.json();
       document.getElementById('adminStats').innerHTML = `
-        <div class="stat-card"><h3>Active Cluster Users</h3><div>${stats.total_users}</div></div>
-        <div class="stat-card"><h3>Transactions Logged</h3><div>${stats.total_conversations}</div></div>
-        <div class="stat-card"><h3>Engine Mean Latency</h3><div>${stats.system_mean_latency_ms}ms</div></div>
-        <div class="stat-card"><h3>Total Token Volume</h3><div>${stats.aggregate_token_pipeline_throughput}</div></div>
+        <div class="stat-card"><h3>Active Users</h3><div>${stats.total_users}</div></div>
+        <div class="stat-card"><h3>Conversations</h3><div>${stats.total_conversations}</div></div>
+        <div class="stat-card"><h3>Avg Latency</h3><div>${stats.system_mean_latency_ms}ms</div></div>
+        <div class="stat-card"><h3>Tokens Processed</h3><div>${stats.aggregate_token_pipeline_throughput}</div></div>
       `;
       const resHealth = await makeRequest(`${apiUrl}/providers/health`); const healthData = await resHealth.json();
       document.getElementById('adminProviderHealthTable').innerHTML = healthData.map(p => `
