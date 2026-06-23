@@ -22,42 +22,18 @@
     --overlay: rgba(44, 42, 38, 0.4);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
-  /* FIX: Mobile viewport scaling fix */
   html,body{height:100dvh; margin:0; padding:0; overflow:hidden;}
   body{
     font-family:'Inter', sans-serif;
     background:var(--bg);
     color:var(--text);
     display:flex;
-    min-height:100dvh;
-    position: relative;
   }
 
-  .sidebar-backdrop {
-    position: fixed;
-    inset: 0;
-    background: var(--overlay);
-    z-index: 35;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s ease;
-  }
-  .sidebar-backdrop.active {
-    opacity: 1;
-    pointer-events: auto;
-  }
+  .sidebar-backdrop { position: fixed; inset: 0; background: var(--overlay); z-index: 35; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
+  .sidebar-backdrop.active { opacity: 1; pointer-events: auto; }
 
-  .sidebar{
-    width:280px;
-    flex-shrink:0;
-    background:var(--sidebar);
-    border-right:1px solid var(--border);
-    display:flex;
-    flex-direction:column;
-    padding:18px 14px;
-    z-index: 40;
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  }
+  .sidebar{ width:280px; flex-shrink:0; background:var(--sidebar); border-right:1px solid var(--border); display:flex; flex-direction:column; padding:18px 14px; z-index: 40; transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
   .brand{ font-family:'Source Serif 4', serif; font-size:19px; font-weight:600; padding:4px 8px 12px; }
   .auth-section { padding: 4px 8px 14px; border-bottom: 1px solid var(--border); margin-bottom: 14px; }
   .user-profile { display: flex; align-items: center; gap: 10px; background: var(--panel); padding: 10px; border-radius: 8px; border: 1px solid var(--border); }
@@ -66,37 +42,11 @@
   .user-name { font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .logout-btn { background: none; border: none; color: var(--accent); font-size: 11.5px; cursor: pointer; padding: 0; font-weight: 500; margin-top: 2px; }
   
-  .new-chat{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    background:var(--panel);
-    border:1px solid var(--border);
-    color:var(--text);
-    padding:12px;
-    border-radius:9px;
-    font-size:14px;
-    font-weight:500;
-    cursor:pointer;
-    margin-bottom:14px;
-    width: 100%;
-    min-height: 44px;
-  }
+  .new-chat{ display:flex; align-items:center; gap:8px; background:var(--panel); border:1px solid var(--border); color:var(--text); padding:12px; border-radius:9px; font-size:14px; font-weight:500; cursor:pointer; margin-bottom:14px; width: 100%; min-height: 44px; }
   .new-chat:hover{border-color:var(--accent); color:var(--accent);}
   .convo-label{ font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--text-dim); padding:0 8px 8px; }
   .convo-list{flex:1; overflow-y:auto; padding-bottom: 20px;}
-  .convo-item{
-    padding:12px 10px;
-    border-radius:8px;
-    font-size:14px;
-    color:var(--text);
-    cursor:pointer;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    margin-bottom:2px;
-    min-height: 44px;
-  }
+  .convo-item{ padding:12px 10px; border-radius:8px; font-size:14px; color:var(--text); cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:2px; min-height: 44px; }
   .convo-item:hover{background:var(--accent-soft);}
   .convo-item.active{background:var(--accent-soft); color:var(--accent); font-weight:500;}
   
@@ -110,48 +60,15 @@
   .connect-panel-inner input, .connect-panel-inner textarea { width:100%; padding:10px; border:1px solid var(--border); border-radius:7px; font-size:13px; margin-bottom:8px; background:var(--panel); color:var(--text); }
   .connect-panel-inner button{ width:100%; padding:10px; background:var(--accent); border:none; border-radius:7px; color:#fff; font-size:13px; font-weight:600; cursor:pointer; min-height: 44px; }
 
-  /* Main Viewport Layout Fix */
-  .main{
-    flex:1;
-    display:flex;
-    flex-direction:column;
-    min-width:0;
-    position: relative;
-    height: 100dvh;
-  }
-  .topbar{
-    display:flex;
-    align-items:center;
-    justify-content: space-between;
-    padding:12px 16px;
-    border-bottom:1px solid var(--border);
-    background:var(--panel);
-    min-height: 56px;
-  }
+  /* True Flexbox Mobile Fix for perfect scrolling */
+  .main{ flex:1; display:flex; flex-direction:column; min-width:0; height: 100dvh; background: var(--bg); }
+  .topbar{ flex-shrink:0; display:flex; align-items:center; justify-content: space-between; padding:12px 16px; border-bottom:1px solid var(--border); background:var(--panel); min-height: 56px; }
   .topbar-left { display: flex; align-items: center; gap: 12px; }
-  .menu-btn, .admin-toggle-btn {
-    background:none; border:1px solid var(--border); border-radius:7px;
-    height:36px; cursor:pointer; font-size:14px; color:var(--text); padding: 0 12px;
-    display: flex; align-items: center; justify-content: center;
-  }
+  .menu-btn, .admin-toggle-btn { background:none; border:1px solid var(--border); border-radius:7px; height:36px; cursor:pointer; font-size:14px; color:var(--text); padding: 0 12px; display: flex; align-items: center; justify-content: center; }
 
-  .chat-scroll{
-    flex:1;
-    overflow-y:auto;
-    display:flex;
-    justify-content:center;
-    width: 100%;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 120px; /* Space for the floating input box */
-  }
-  .chat-col{
-    width:100%;
-    max-width:720px;
-    padding:24px 16px 20px;
-    display:flex;
-    flex-direction:column;
-    gap:20px;
-  }
+  .chat-scroll{ flex:1; overflow-y:auto; display:flex; flex-direction:column; align-items:center; width: 100%; -webkit-overflow-scrolling: touch; }
+  .chat-col{ width:100%; max-width:760px; padding:24px 16px 40px; display:flex; flex-direction:column; gap:20px; }
+  
   .empty-state{ margin:auto; text-align:center; color:var(--text-dim); padding:40px 16px; }
   .empty-state h1{ font-family:'Source Serif 4', serif; font-weight:600; font-size:24px; color:var(--text); margin:0 0 10px; }
   .empty-state p { font-size: 14px; line-height: 1.5; }
@@ -159,97 +76,55 @@
   .msg-container { display: flex; flex-direction: column; gap: 4px; width: 100%; }
   .msg-row{display:flex; width: 100%;}
   .msg-row.user{justify-content:flex-end;}
-  .msg{
-    max-width:90%;
-    padding:14px 18px;
-    border-radius:16px;
-    font-size:15px;
-    line-height:1.6;
-    white-space: pre-wrap;
-    word-break: break-word;
-    overflow-wrap: break-word;
-    position: relative;
-  }
+  .msg{ max-width:90%; padding:14px 18px; border-radius:16px; font-size:15px; line-height:1.6; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; position: relative; }
   
-  /* FIX: Markdown & Code Formatting */
-  .msg p { margin: 0 0 10px 0; }
+  /* FIXED MARKDOWN FORMATTING (Spacing & Headings) */
+  .msg h1, .msg h2, .msg h3, .msg h4 { margin: 1.2em 0 0.5em 0; font-weight: 700; color: #111; line-height: 1.3; display: block; }
+  .msg h1:first-child, .msg h2:first-child, .msg h3:first-child { margin-top: 0; }
+  .msg p { margin: 0 0 1em 0; display: block; }
   .msg p:last-child { margin-bottom: 0; }
-  .msg code {
-    background: rgba(0,0,0,0.06);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 13.5px;
-  }
-  .msg pre {
-    background: #282c34;
-    color: #abb2bf;
-    padding: 16px;
-    border-radius: 10px;
-    overflow-x: auto;
-    margin: 12px 0;
-    -webkit-overflow-scrolling: touch;
-  }
-  .msg pre code {
-    background: transparent;
-    padding: 0;
-    color: inherit;
-    font-size: 13.5px;
-  }
-  .msg table { display: block; border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 14px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .msg th, .msg td { border: 1px solid var(--border); padding: 10px; text-align: left; min-width: 100px; }
+  .msg ul, .msg ol { margin: 0 0 1em 0; padding-left: 20px; }
+  .msg li { margin-bottom: 0.4em; }
+  .msg strong { font-weight: 600; color: #000; }
+  .msg table { display: block; border-collapse: collapse; width: 100%; margin: 1em 0; font-size: 14px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .msg th, .msg td { border: 1px solid var(--border); padding: 10px; text-align: left; min-width: 120px; }
   .msg th { background-color: var(--sidebar); font-weight: 600; }
 
+  /* CODIC STRUCTURE & COPY BUTTON FIX */
+  .msg code { background: rgba(0,0,0,0.06); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 13.5px; }
+  .msg pre { background: #282c34; color: #abb2bf; padding: 40px 16px 16px; border-radius: 10px; overflow-x: auto; margin: 1.2em 0; position: relative; -webkit-overflow-scrolling: touch; }
+  .msg pre code { background: transparent; padding: 0; color: inherit; font-size: 13.5px; }
+  .copy-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.1); border: none; color: #fff; font-size: 12px; padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: background 0.2s; font-family: 'Inter', sans-serif; }
+  .copy-btn:hover { background: rgba(255,255,255,0.25); }
+
   .msg-row.user .msg{ background:var(--bubble-user); border-bottom-right-radius:4px; }
-  .msg-row.model .msg{ background:var(--bubble-model); border:1px solid var(--border); border-bottom-left-radius:4px; }
-  
-  /* System logs are now hidden but kept in CSS for errors */
-  .msg-row.system { display: none; }
+  .msg-row.model .msg{ background:var(--bubble-model); border:1px solid var(--border); border-bottom-left-radius:4px; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
+  .msg-row.system { display: none; } /* Hide backend router logs */
   
   .feedback-bar { display: flex; gap: 8px; padding-left: 12px; margin-top: -2px; }
   .feedback-btn { background: none; border: none; cursor: pointer; font-size: 14px; opacity: 0.35; padding: 4px; min-width: 32px; min-height: 32px; transition: opacity 0.2s, transform 0.1s; }
   .feedback-btn:hover { opacity: 1; transform: scale(1.15); }
   .feedback-btn.active { opacity: 1; }
 
-  .streaming-cursor::after {
-    content: "┃";
-    animation: textCaretBlink 0.75s step-end infinite;
-    font-weight: 700;
-    color: var(--accent);
-    margin-left: 2px;
-  }
+  .streaming-cursor::after { content: "┃"; animation: textCaretBlink 0.75s step-end infinite; font-weight: 700; color: var(--accent); margin-left: 2px; }
   @keyframes textCaretBlink { 50% { opacity: 0; } }
 
-  .composer-wrap{
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display:flex;
-    justify-content:center;
-    padding:12px 16px 20px;
-    background: linear-gradient(to top, var(--bg) 70%, transparent);
-    z-index: 30;
-  }
-  .composer{ width:100%; max-width:720px; margin: 0 auto; display:flex; align-items:flex-end; gap:8px; background:var(--panel); border:1px solid var(--border); border-radius:24px; padding:6px 6px 6px 16px; box-shadow:0 4px 12px rgba(0,0,0,0.06); }
+  /* Input Composer Flex Fix */
+  .composer-wrap{ flex-shrink: 0; display:flex; flex-direction:column; align-items:center; padding:12px 16px 20px; background: var(--bg); border-top: 1px solid var(--border); }
+  
+  /* Upload Attachment Preview Pop-up */
+  #attachmentPreview { display: none; background: var(--accent-soft); color: var(--accent); font-size: 13px; font-weight: 500; padding: 8px 16px; border-radius: 12px 12px 0 0; margin-bottom: -1px; width: 100%; max-width: 760px; border: 1px solid var(--border); border-bottom: none; z-index: 10; }
+  .attachment-preview-inner { display: flex; justify-content: space-between; align-items: center; }
+  .attachment-preview-inner button { background: none; border: none; font-size: 14px; cursor: pointer; color: var(--accent); font-weight: bold; }
+
+  .composer{ width:100%; max-width:760px; margin: 0 auto; display:flex; align-items:flex-end; gap:8px; background:var(--panel); border:1px solid var(--border); border-radius:24px; padding:8px 8px 8px 16px; box-shadow:0 4px 12px rgba(0,0,0,0.04); z-index: 20; position: relative; }
   .composer textarea{ flex:1; border:none; outline:none; resize:none; font-family:'Inter', sans-serif; font-size:15px; line-height:1.5; max-height:120px; padding:10px 0; background:transparent; color:var(--text); }
   .composer button{ background:var(--accent); border:none; color:#fff; width:38px; height:36px; border-radius:50%; font-size:16px; cursor:pointer; flex-shrink:0; display: flex; align-items: center; justify-content: center; }
   .composer button:disabled{background:#d8cfc0; cursor:not-allowed;}
   .attach-btn{ background:none !important; border:none; color:var(--text-dim) !important; width:36px; height:36px; border-radius:50%; font-size:18px; cursor:pointer; flex-shrink:0; display: flex; align-items: center; justify-content: center; }
   .attach-btn:hover{background:var(--accent-soft) !important; color:var(--accent) !important;}
-  .attachment-chip{ display:inline-flex; align-items:center; gap:6px; background:var(--accent-soft); color:var(--accent); font-size:12px; padding:6px 12px; border-radius:20px; margin:0 0 8px 16px; }
 
-  .admin-view {
-    position: absolute;
-    inset: 0;
-    background: var(--bg);
-    z-index: 50;
-    display: none;
-    flex-direction: column;
-    padding: 20px;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
+  .admin-view { position: absolute; inset: 0; background: var(--bg); z-index: 50; display: none; flex-direction: column; padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
   .admin-view.open { display: flex; }
   .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px; }
   .stat-card { background: var(--panel); border: 1px solid var(--border); padding: 16px; border-radius: 12px; }
@@ -260,30 +135,16 @@
   .admin-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
   .admin-table th, .admin-table td { padding: 12px 10px; border-bottom: 1px solid var(--border); min-width: 90px; }
   .admin-table th { background: var(--bg); font-weight: 600; }
-  
   .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-block; }
   .status-badge.online { background: #e2f0d9; color: #385723; }
   .status-badge.offline { background: #fce4d6; color: #c65911; }
 
   @media (max-width: 760px){
-    .sidebar{
-      position:fixed;
-      inset:0 auto 0 0;
-      margin-left:0;
-      transform: translateX(-100%);
-    }
-    .sidebar.open{
-      transform: translateX(0);
-      box-shadow:4px 0 24px rgba(44,42,38,0.15);
-    }
+    .sidebar{ position:fixed; inset:0 auto 0 0; margin-left:0; transform: translateX(-100%); }
+    .sidebar.open{ transform: translateX(0); box-shadow:4px 0 24px rgba(44,42,38,0.15); }
     .msg { max-width: 95%; }
     .chat-col { padding: 16px 12px 20px; gap: 16px; }
     .admin-grid { grid-template-columns: 1fr 1fr; }
-    .stat-card { padding: 12px; }
-    .stat-card div { font-size: 18px; }
-  }
-  @media (max-width: 480px) {
-    .admin-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -293,22 +154,19 @@
 
   <div class="sidebar" id="sidebar">
     <div class="brand">Pratham AI</div>
-    
     <div class="auth-section">
       <div id="googleSignInContainer"></div>
       <div id="userProfile" class="user-profile" style="display:none;">
         <img id="userAvatar" src="" alt="Avatar">
         <div class="user-info">
-          <div id="profileName" class="user-name">Guest Node</div>
+          <div id="profileName" class="user-name">Guest</div>
           <button id="logoutBtn" class="logout-btn">Sign out</button>
         </div>
       </div>
     </div>
-
     <button class="new-chat" id="newChatBtn">＋ New conversation</button>
     <div class="convo-label">Conversations</div>
     <div class="convo-list" id="convoList"></div>
-    
     <div class="sidebar-footer">
       <button class="connect-toggle" id="connectToggle">
         <span><span class="status-dot" id="statusDot"></span>Engine Cluster</span>
@@ -318,6 +176,8 @@
         <div class="connect-panel-inner">
           <input type="text" id="endpointInput" placeholder="https://your-server.com">
           <button id="connectBtn">Connect Backend</button>
+          <div style="font-size:10px; font-weight:600; text-transform:uppercase; color:var(--text-dim); margin: 10px 0 6px 2px;">Active Cluster Rings</div>
+          <div id="sidebarHealthStatus" style="max-height: 110px; overflow-y: auto; margin-bottom:12px;"></div>
         </div>
       </div>
     </div>
@@ -326,7 +186,7 @@
   <div class="main">
     <div class="topbar">
       <div class="topbar-left">
-        <button class="menu-btn" id="menuBtn" title="Open Sidebar">☰</button>
+        <button class="menu-btn" id="menuBtn">☰</button>
         <div class="brand" style="padding:0; font-size:16px;">Pratham AI</div>
       </div>
       <button class="admin-toggle-btn" id="adminToggleBtn" style="display:none;">Admin Control</button>
@@ -336,12 +196,18 @@
       <div class="chat-col" id="chatCol">
         <div class="empty-state">
           <h1>How can I help you today?</h1>
-          <p>Sign in to sync your conversations.</p>
+          <p>Sign in to sync your conversations and access AI features.</p>
         </div>
       </div>
     </div>
 
     <div class="composer-wrap">
+      <div id="attachmentPreview">
+        <div class="attachment-preview-inner">
+          <span id="attachmentName">📎 Uploading...</span>
+          <button onclick="clearAttachment()" title="Remove">✕</button>
+        </div>
+      </div>
       <div class="composer">
         <textarea id="input" rows="1" placeholder="Message Pratham AI…" autocomplete="off"></textarea>
         <button class="attach-btn" id="attachBtn" type="button" title="Attach file">📎</button>
@@ -353,23 +219,14 @@
     <div class="admin-view" id="adminView">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
         <h2>System Monitoring Cluster</h2>
-        <button class="admin-toggle-btn" id="closeAdminBtn">Close Terminal</button>
+        <button class="admin-toggle-btn" id="closeAdminBtn">Close</button>
       </div>
       <div class="admin-grid" id="adminStats"></div>
-      
       <div class="table-box">
         <h2>Cluster Routing Engine Matrix</h2>
         <table class="admin-table">
-          <thead><tr><th>ID</th><th>Provider Element</th><th>Status</th><th>Last Linked Request</th><th>Errors</th></tr></thead>
+          <thead><tr><th>ID</th><th>Provider</th><th>Status</th><th>Last Request</th><th>Errors</th></tr></thead>
           <tbody id="adminProviderHealthTable"></tbody>
-        </table>
-      </div>
-
-      <div class="table-box">
-        <h2>User Feedback Signal Log</h2>
-        <table class="admin-table">
-          <thead><tr><th>ID</th><th>User</th><th>Message Snippet</th><th>Rating</th><th>Timestamp</th></tr></thead>
-          <tbody id="adminFeedbackTable"></tbody>
         </table>
       </div>
     </div>
@@ -385,6 +242,7 @@
   let idToken = localStorage.getItem('pratham_id_token') || 'sandbox-master-token-local-dev-use';
   let activeConvoId = null;
   let busy = false;
+  let pendingFileContext = null;
 
   const sidebar = document.getElementById('sidebar');
   const backdrop = document.getElementById('sidebarBackdrop');
@@ -395,10 +253,10 @@
 
   if(apiUrl) document.getElementById('endpointInput').value = apiUrl;
 
-  // FIX: Configure Marked.js to format code blocks identically to ChatGPT
+  // Markdown & Syntax Highlighting Setup
   if (typeof marked !== 'undefined') { 
     marked.setOptions({ 
-      breaks: true, 
+      breaks: true, // Fixes newline parsing
       gfm: true,
       highlight: function(code, lang) {
         const language = hljs.getLanguage(lang) ? lang : 'plaintext';
@@ -407,16 +265,29 @@
     }); 
   }
 
+  // Inject Copy Buttons into Code Blocks
+  function addCopyButtons(element) {
+    element.querySelectorAll('pre').forEach(pre => {
+      if (pre.querySelector('.copy-btn')) return;
+      const btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.innerText = 'Copy';
+      btn.onclick = () => {
+        let code = pre.querySelector('code');
+        navigator.clipboard.writeText(code ? code.innerText : pre.innerText);
+        btn.innerText = 'Copied!';
+        setTimeout(() => btn.innerText = 'Copy', 2000);
+      };
+      pre.appendChild(btn);
+    });
+  }
+
   function closeSidebar() { sidebar.classList.remove('open'); backdrop.classList.remove('active'); }
   function openSidebar() { sidebar.classList.add('open'); backdrop.classList.add('active'); }
-  
   document.getElementById('menuBtn').addEventListener('click', (e) => { e.stopPropagation(); sidebar.classList.contains('open') ? closeSidebar() : openSidebar(); });
   backdrop.addEventListener('click', closeSidebar);
   sidebar.addEventListener('click', (e) => { e.stopPropagation(); });
-
-  window.addEventListener("resize", () => {
-    if (window.innerWidth > 760) { closeSidebar(); }
-  });
+  window.addEventListener("resize", () => { if (window.innerWidth > 760) closeSidebar(); });
 
   window.onload = function () {
     google.accounts.id.initialize({
@@ -427,7 +298,7 @@
     if(idToken && idToken !== 'sandbox-master-token-local-dev-use') parseAndSetupUser(idToken);
   };
 
-  function renderGoogleButton() { google.accounts.id.renderButton(document.getElementById("googleSignInContainer"), { theme: "outline", size: "medium", text: "signin_with" }); }
+  function renderGoogleButton() { google.accounts.id.renderButton(document.getElementById("googleSignInContainer"), { theme: "outline", size: "medium" }); }
   function handleCredentialResponse(response) { idToken = response.credential; localStorage.setItem('pratham_id_token', idToken); parseAndSetupUser(idToken); }
 
   async function parseAndSetupUser(token) {
@@ -438,10 +309,7 @@
       document.getElementById('userAvatar').src = payload.picture || '';
       document.getElementById('profileName').textContent = payload.name || 'User';
       setStatus(!!apiUrl);
-      if(apiUrl) {
-        await syncConversations();
-        await checkAdminPrivileges();
-      }
+      if(apiUrl) { await syncConversations(); await checkAdminPrivileges(); }
     } catch(e) { clearAuth(); }
   }
 
@@ -458,12 +326,23 @@
   document.getElementById('logoutBtn').addEventListener('click', () => { clearAuth(); google.accounts.id.disableAutoSelect(); renderGoogleButton(); });
 
   function getHeaders() { const h = { 'Content-Type': 'application/json' }; if(idToken) h['Authorization'] = `Bearer ${idToken}`; return h; }
+  
+  // FIX: Token Expiry / 401 Handler
   async function makeRequest(url, options = {}, timeoutMs = 60000) {
     const controller = new AbortController();
     const t = setTimeout(() => controller.abort(), timeoutMs);
     options.headers = { ...getHeaders(), ...options.headers };
     options.signal = controller.signal;
-    try { const res = await fetch(url, options); clearTimeout(t); return res; } catch(e) { clearTimeout(t); throw e; }
+    try { 
+      const res = await fetch(url, options); 
+      clearTimeout(t); 
+      if (res.status === 401) {
+        alert("Session expired. Please sign in again.");
+        clearAuth();
+        throw new Error("Unauthorized");
+      }
+      return res; 
+    } catch(e) { clearTimeout(t); throw e; }
   }
 
   async function checkAdminPrivileges() {
@@ -472,9 +351,7 @@
       const res = await makeRequest(`${apiUrl}/user/role`);
       if(res.ok) {
         const data = await res.json();
-        if (data.role === 'admin') {
-          document.getElementById('adminToggleBtn').style.display = 'block';
-        }
+        if (data.role === 'admin') document.getElementById('adminToggleBtn').style.display = 'block';
       }
     } catch(e){}
   }
@@ -519,25 +396,23 @@
 
   document.getElementById('newChatBtn').addEventListener('click', () => {
     activeConvoId = null;
-    document.getElementById('chatCol').innerHTML = `
-      <div class="empty-state"><h1>New Conversation</h1><p>Send a message to start.</p></div>
-    `;
+    document.getElementById('chatCol').innerHTML = `<div class="empty-state"><h1>New Conversation</h1><p>Send a message to start.</p></div>`;
     Array.from(document.getElementById('convoList').children).forEach(el => el.classList.remove('active'));
     closeSidebar(); 
   });
 
   function addMessage(role, text, messageId = null, feedbackRating = null) {
     const currentEmpty = chatCol.querySelector('.empty-state'); if (currentEmpty) currentEmpty.remove();
-    
-    // Ignore displaying the system routing messages entirely to keep UX clean
-    if (role === 'system') return;
+    if (role === 'system') return; // Hide internal routing logs from user
     
     const container = document.createElement('div'); container.className = 'msg-container';
     const row = document.createElement('div'); row.className = `msg-row ${role}`;
     const bubble = document.createElement('div'); bubble.className = 'msg';
     
     if (role === 'model' && typeof marked !== 'undefined') { 
-      const rawHtml = marked.parse(text); bubble.innerHTML = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(rawHtml) : rawHtml;
+      const rawHtml = marked.parse(text); 
+      bubble.innerHTML = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(rawHtml) : rawHtml;
+      addCopyButtons(bubble);
     } else { bubble.textContent = text; }
     
     row.appendChild(bubble); container.appendChild(row);
@@ -565,28 +440,28 @@
   }
 
   async function handleSend() {
-    const text = input.value.trim();
-    if (!text || busy) return;
+    let text = input.value.trim();
+    if ((!text && !pendingFileContext) || busy) return;
     
-    busy = true;
-    sendBtn.disabled = true;
-    input.value = '';
-    input.style.height = 'auto';
+    busy = true; sendBtn.disabled = true;
+    input.value = ''; input.style.height = 'auto';
+    const currentEmpty = chatCol.querySelector('.empty-state'); if (currentEmpty) currentEmpty.remove();
 
-    const currentEmpty = chatCol.querySelector('.empty-state');
-    if (currentEmpty) currentEmpty.remove();
-
+    // If file was attached, append its context tag to the visible message
+    if (pendingFileContext) {
+      text = text ? `${text}\n\n[Attached File: ${pendingFileContext}]` : `[Attached File: ${pendingFileContext}]`;
+      clearAttachment();
+    }
+    
     addMessage('user', text);
 
-    const modelContainer = document.createElement('div');
-    modelContainer.className = 'msg-container';
+    const modelContainer = document.createElement('div'); modelContainer.className = 'msg-container';
     modelContainer.innerHTML = `<div class="msg-row model"><div class="msg streaming-cursor"></div></div>`;
     const textBubbleNode = modelContainer.querySelector('.msg');
     chatCol.appendChild(modelContainer);
     
     const scrollWrap = document.getElementById('chatScrollContainer');
     scrollWrap.scrollTop = scrollWrap.scrollHeight;
-
     let assistantChunkAccumulator = "";
 
     try {
@@ -596,7 +471,8 @@
         body: JSON.stringify({ message: text, conversation_id: activeConvoId })
       });
 
-      if (!response.ok) throw new Error(`Server returned code: ${response.status}`);
+      if (response.status === 401) throw new Error("Unauthorized/Session Expired");
+      if (!response.ok) throw new Error(`Server code: ${response.status}`);
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder("utf-8");
@@ -613,41 +489,53 @@
             activeConvoId = parseInt(line.split(":")[1]);
             await syncConversations();
           } else if (line.startsWith("PROVIDER:")) {
-             // System implicitly ignores provider UI display per instructions
+             // Silently route, hiding backend architecture from user
           } else if (line !== "") {
             assistantChunkAccumulator += line;
-            textBubbleNode.textContent = assistantChunkAccumulator;
+            textBubbleNode.textContent = assistantChunkAccumulator; // Safe rendering during stream
             scrollWrap.scrollTop = scrollWrap.scrollHeight;
           }
         }
       }
 
+      // Safe Markdown + Code Parsing after stream concludes
       const finalizedHtml = typeof marked !== 'undefined' ? marked.parse(assistantChunkAccumulator) : assistantChunkAccumulator;
       textBubbleNode.innerHTML = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(finalizedHtml) : finalizedHtml;
+      addCopyButtons(textBubbleNode);
       textBubbleNode.classList.remove('streaming-cursor');
       
     } catch (err) {
       textBubbleNode.classList.remove('streaming-cursor');
-      textBubbleNode.textContent = `Sorry, I encountered a communication error: ${err.message}`;
+      textBubbleNode.textContent = `Error: ${err.message}. Please refresh or start a new chat.`;
+      if(err.message.includes("Unauthorized")) clearAuth();
     }
 
-    busy = false;
-    sendBtn.disabled = false;
+    busy = false; sendBtn.disabled = false;
+  }
+
+  // --- FILE ATTACHMENT POPUP LOGIC ---
+  function clearAttachment() {
+    pendingFileContext = null;
+    document.getElementById('attachmentPreview').style.display = 'none';
+    fileInput.value = "";
   }
 
   document.getElementById('attachBtn').addEventListener('click', () => { if(apiUrl) fileInput.click(); });
   fileInput.addEventListener('change', async () => {
     const file = fileInput.files[0]; 
     if (!file) return;
-    if (!activeConvoId) { alert("Please send a message to start the conversation before attaching a file."); return; }
+    if (!activeConvoId) { alert("Please send a hello message to start the conversation before attaching a file."); return; }
     
-    const chip = document.createElement('div'); chip.className = 'attachment-chip'; chip.textContent = `📎 Uploading: ${file.name}…`; chatCol.appendChild(chip);
+    document.getElementById('attachmentPreview').style.display = 'block';
+    document.getElementById('attachmentName').innerText = `📎 Uploading: ${file.name}…`;
+    
     const form = new FormData(); form.append('file', file); form.append('conversation_id', activeConvoId);
     try {
       const res = await fetch(`${apiUrl}/upload`, { method: 'POST', body: form, headers: { 'Authorization': `Bearer ${idToken}` } });
       const data = await res.json(); if(!res.ok) throw new Error(data.error);
-      chip.textContent = `📎 Attached: ${data.filename}`;
-    } catch(e) { chip.textContent = `📎 Upload failed: ${e.message}`; }
+      document.getElementById('attachmentName').innerText = `📎 Ready: ${data.filename}`;
+      pendingFileContext = data.filename;
+    } catch(e) { document.getElementById('attachmentName').innerText = `❌ Upload failed: ${e.message}`; }
   });
 
   const adminToggle = document.getElementById('adminToggleBtn'); const adminView = document.getElementById('adminView');
@@ -657,18 +545,9 @@
   async function loadAdminTelemetry() {
     try {
       const resStats = await makeRequest(`${apiUrl}/admin/stats`); const stats = await resStats.json();
-      document.getElementById('adminStats').innerHTML = `
-        <div class="stat-card"><h3>Active Users</h3><div>${stats.total_users}</div></div>
-        <div class="stat-card"><h3>Conversations</h3><div>${stats.total_conversations}</div></div>
-        <div class="stat-card"><h3>Avg Latency</h3><div>${stats.system_mean_latency_ms}ms</div></div>
-        <div class="stat-card"><h3>Tokens Processed</h3><div>${stats.aggregate_token_pipeline_throughput}</div></div>
-      `;
+      document.getElementById('adminStats').innerHTML = `<div class="stat-card"><h3>Active Users</h3><div>${stats.total_users}</div></div><div class="stat-card"><h3>Conversations</h3><div>${stats.total_conversations}</div></div><div class="stat-card"><h3>Avg Latency</h3><div>${stats.system_mean_latency_ms}ms</div></div><div class="stat-card"><h3>Tokens Processed</h3><div>${stats.aggregate_token_pipeline_throughput}</div></div>`;
       const resHealth = await makeRequest(`${apiUrl}/providers/health`); const healthData = await resHealth.json();
-      document.getElementById('adminProviderHealthTable').innerHTML = healthData.map(p => `
-        <tr><td><strong>${p.id}</strong></td><td>${p.name}</td><td><span class="status-badge ${p.is_online ? 'online' : 'offline'}">${p.is_online ? 'ONLINE' : 'OFFLINE'}</span></td><td>${p.last_success_at || 'Never'}</td><td>${p.error_count}</td></tr>
-      `).join('');
-      const resFeed = await makeRequest(`${apiUrl}/admin/feedback`); const feedData = await resFeed.json();
-      document.getElementById('adminFeedbackTable').innerHTML = feedData.map(f => `<tr><td>${f.id}</td><td>${f.email}</td><td>${f.content.substring(0,30)}...</td><td>${f.rating === 1 ? '👍' : '👎'}</td><td>${f.created_at}</td></tr>`).join('');
+      document.getElementById('adminProviderHealthTable').innerHTML = healthData.map(p => `<tr><td><strong>${p.id}</strong></td><td>${p.name}</td><td><span class="status-badge ${p.is_online ? 'online' : 'offline'}">${p.is_online ? 'ONLINE' : 'OFFLINE'}</span></td><td>${p.last_success_at || 'Never'}</td><td>${p.error_count}</td></tr>`).join('');
     } catch(e){}
   }
 
