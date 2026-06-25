@@ -32,8 +32,8 @@
   ::-webkit-scrollbar-thumb { background: #dedbd3; border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: #cbd3cb; }
 
-  /* Navigation Sidebar Layout - Set to comfortable ChatGPT desktop standard width */
-  .sidebar { width: 280px; flex-shrink: 0; background: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 16px 12px; z-index: 40; position: relative; transition: transform 0.25s ease; }
+  /* Navigation Sidebar Layout */
+  .sidebar { width: 280px; flex-shrink: 0; background: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 16px 12px; z-index: 40; position: relative; transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
   
   .brand-header { display: flex; align-items: center; gap: 8px; font-family: 'Source Serif 4', serif; font-size: 21px; font-weight: 600; color: var(--text-main); margin-bottom: 20px; padding: 4px 8px; }
   .brand-logo { color: var(--accent-color); font-size: 22px; }
@@ -42,15 +42,21 @@
   .new-chat-btn:hover { background: rgba(0,0,0,0.03); border-color: var(--text-dim); }
   .shortcut-badge { font-size: 11px; color: var(--text-dim); background: rgba(0,0,0,0.04); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-color); font-family: monospace; }
 
-  .convo-list { flex: 1; overflow-y: auto; margin: 0 -4px; padding: 0 4px; }
+  /* Premium Asset Listing Dynamic Container Layout */
+  .convo-list { flex: 1; overflow-y: auto; margin: 0 -4px; padding: 0 4px; display: flex; flex-direction: column; gap: 2px; }
   .convo-label { font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--text-dim); padding: 14px 8px 6px; font-weight: 700; }
-  .convo-item { padding: 10px 12px; border-radius: 8px; font-size: 13.5px; color: var(--text-secondary); cursor: pointer; margin-bottom: 2px; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s, color 0.2s; }
+  
+  /* Modern Asset List Row Structuring System */
+  .convo-item { position: relative; padding: 10px 12px; border-radius: 8px; font-size: 14px; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: background 0.2s, color 0.2s; group-hover: pointer; }
   .convo-item:hover { background: rgba(0,0,0,0.03); color: var(--text-main); }
   .convo-item.active { background: var(--bg-panel); color: var(--text-main); font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-  .convo-title-text { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .delete-convo-btn { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 14px; display: none; padding: 2px; }
-  .convo-item:hover .delete-convo-btn { display: block; }
-  .delete-convo-btn:hover { color: #e55353; }
+  
+  .convo-title-text { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 24px; }
+  
+  /* Options Context Menu Action Trigger Button Placement */
+  .delete-convo-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--text-dim); cursor: pointer; font-size: 14px; display: none; padding: 4px; border-radius: 4px; align-items: center; justify-content: center; transition: color 0.2s, background 0.2s; }
+  .convo-item:hover .delete-convo-btn { display: flex; }
+  .delete-convo-btn:hover { color: #e55353; background: rgba(0,0,0,0.04); }
 
   /* Bottom User Container Profile */
   .sidebar-footer { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border-color); position: relative; }
@@ -68,23 +74,23 @@
   .menu-item:hover { background: rgba(255,255,255,0.02); color: var(--text-main); }
   .menu-divider { height: 1px; background: var(--border-color); margin: 4px 0; }
 
-  /* Main View Container Layout Port Workspace - Stretches fluidly across remaining PC viewport width */
+  /* Main View Container Layout Port Workspace - Expands fluidly across remaining PC viewport width */
   .main { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100dvh; background: var(--bg-main); position: relative; align-items: center; width: 100%; }
   
-  /* Topbar contains standard layout hamburger toggle button for fluid layouts */
+  /* Topbar Top Navigation Lane Panel */
   .topbar { width: 100%; flex-shrink: 0; display: flex; align-items: center; padding: 0 24px; min-height: 56px; }
   .menu-toggle-btn { background: none; border: none; font-size: 22px; color: var(--text-secondary); cursor: pointer; display: none; }
   .menu-toggle-btn:hover { color: var(--text-main); }
 
-  /* Continuous Workspace Viewport Container - Expanded on PC to span full available width cleanly */
+  /* Continuous Workspace Viewport Container - Expanded on PC to eliminate vacant side gaps */
   .chat-scroll { flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; width: 100%; -webkit-overflow-scrolling: touch; }
   .chat-col { width: 100%; max-width: 100%; padding: 20px 40px; display: flex; flex-direction: column; gap: 36px; flex: 1; }
 
-  /* Elegant Header Dashboard Layout Dashboard Viewport */
+  /* Centralized Presentation Layout - Spans widescreen panels elegantly */
   .welcome-state { margin: auto; text-align: center; width: 100%; max-width: 1200px; padding: 40px 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
   .welcome-title { font-family: 'Source Serif 4', serif; font-size: 38px; font-weight: 400; color: var(--text-main); margin-bottom: 36px; letter-spacing: -0.01em; }
   
-  /* Horizontal Grid Suggestion Matrix - Stretches side to side perfectly on desktop viewports */
+  /* Horizontal Grid Suggestion Matrix */
   .suggestion-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; width: 100%; margin-top: 10px; }
   .suggestion-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; text-align: left; cursor: pointer; transition: background 0.2s, border-color 0.2s, transform 0.1s; display: flex; flex-direction: column; gap: 8px; justify-content: space-between; min-height: 130px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
   .suggestion-card:hover { background: var(--bg-main); border-color: var(--text-dim); transform: translateY(-1px); }
@@ -93,8 +99,8 @@
   .suggestion-text { font-size: 14.5px; font-weight: 500; color: var(--text-main); }
   .suggestion-sub { font-size: 12.5px; color: var(--text-dim); line-height: 1.4; }
 
-  /* Message Stream Blocks Rendering Structures - Set to standard premium reading width bounds */
-  .msg-container { display: flex; flex-direction: column; width: 100%; max-width: 1150px; margin: 0 auto; animation: textReveal 0.2s ease-out; }
+  /* Message Stream Blocks Rendering Structures - Balanced center alignment comfort lane */
+  .msg-container { display: flex; flex-direction: column; width: 100%; max-width: 1250px; margin: 0 auto; animation: textReveal 0.2s ease-out; }
   @keyframes textReveal { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: translateY(0); } }
   
   .msg-sender-label { font-size: 12px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -131,7 +137,7 @@
   .streaming-cursor::after { content: "▋"; animation: flashCursor 0.8s step-end infinite; color: var(--accent-color); margin-left: 2px; }
   @keyframes flashCursor { 50% { opacity: 0; } }
 
-  /* Expanded Input Terminal Container - Formatted to 1200px Max-Width Standard for Widescreen Framework Layouts */
+  /* Expanded Input Terminal Container - Formatted to 1200px Max-Width Standard for Widescreen Layouts */
   .composer-wrap { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; width: 100%; padding: 0 40px 32px; background: linear-gradient(180deg, transparent 0%, var(--bg-main) 35%); z-index: 30; }
   .composer-container { width: 100%; max-width: 1200px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 28px; padding: 16px 22px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); position: relative; transition: border-color 0.2s, box-shadow 0.2s; }
   .composer-container:focus-within { border-color: var(--text-dim); box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
@@ -151,7 +157,7 @@
   .send-action-btn:disabled { background: var(--border-color); color: var(--text-dim); cursor: not-allowed; transform: none; }
   .send-action-btn:not(:disabled):hover { background: var(--accent-color); color: #fff; transform: scale(1.03); }
 
-  /* Overlay Modal Preferences Framework Panel */
+  /* Overlay Modal preferences Framework Panel */
   .modal-overlay { position: fixed; inset: 0; background: var(--overlay-color); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(2px); }
   .modal-overlay.open { display: flex; }
   .modal-frame { background: var(--bg-panel); border: 1px solid var(--border-color); width: 100%; max-width: 540px; border-radius: 16px; box-shadow: 0 16px 36px rgba(0,0,0,0.08); display: flex; flex-direction: column; overflow: hidden; animation: modalPop 0.15s ease-out; }
@@ -170,13 +176,13 @@
   .action-danger-btn { background: #c94a4a; border: none; color: white; padding: 10px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; text-align: center; }
   .action-danger-btn:hover { background: #b03f3f; }
 
-  /* Backdrop Overlay Shield for Mobile/Tablet menu triggers */
+  /* Backdrop Overlay Shield for Mobile/Tablet context panel triggers */
   .backdrop-shield { position: fixed; inset: 0; background: var(--overlay-color); z-index: 35; display: none; opacity: 0; transition: opacity 0.2s ease; }
   .backdrop-shield.active { display: block; opacity: 1; }
 
-  /* HIGH FIDELITY ADAPTIVE RESPONSIVE LAYOUT BREAKPOINTS (ChatGPT-Style Architecture) */
+  /* HIGH FIDELITY ADAPTIVE RESPONSIVE LAYOUT BREAKPOINTS */
   @media (max-width: 1024px) {
-    /* TABLET WORKSPACE ADAPTER */
+    /* TABLET WORKSPACE ADAPTER STYLE CONFORMS */
     .sidebar { position: fixed; inset: 0 auto 0 0; transform: translateX(-100%); width: 280px; box-shadow: none; }
     .sidebar.open { transform: translateX(0); box-shadow: 8px 0 24px rgba(0,0,0,0.04); }
     .menu-toggle-btn { display: block; }
@@ -189,7 +195,7 @@
   }
 
   @media (max-width: 760px) {
-    /* MOBILE WORKSPACE ADAPTER */
+    /* MOBILE WORKSPACE ADAPTER STYLE CONFORMS */
     .sidebar { width: 270px; }
     .topbar { padding: 0 16px; min-height: 48px; }
     .menu-toggle-btn { display: block; margin-top: 4px; }
@@ -436,7 +442,7 @@
     chatCol.innerHTML = `
       <div class="welcome-state">
         <h1 class="welcome-title">Welcome to Pratham AI</h1>
-        <p style="color: var(--text-secondary); font-size: 15.5px; margin-bottom: 28px; line-height: 1.65; max-width: 480px; margin-left: auto; margin-right: auto;">Sign in to sync conversations across devices, access advanced history processing, and upload files context strings.</p>
+        <p style="color: var(--text-secondary); font-size: 15.5px; margin-bottom: 28px; line-height: 1.65; max-width: 480px; margin-left: auto; margin-right: auto;">Sign in to sync conversations across devices.</p>
         <div id="googleSignInContainerMain" style="display:flex; justify-content:center; margin-bottom: 12px;"></div>
       </div>
     `;
@@ -553,7 +559,6 @@
     
     const container = document.createElement('div'); container.className = 'msg-container';
     
-    // Core Identity Isolation: Enforcing fixed structural string labels for the UI
     const senderLabel = document.createElement('div');
     senderLabel.className = `msg-sender-label ${role === 'user' ? 'user' : 'model'}`;
     senderLabel.textContent = role === 'user' ? 'You' : 'Pratham AI';
