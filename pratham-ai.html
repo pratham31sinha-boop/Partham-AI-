@@ -24,7 +24,7 @@
   }
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-  html, body { height: 100dvh; background: var(--bg-main); color: var(--text-main); font-family: 'Inter', sans-serif; overflow: hidden; display: flex; }
+  html, body { height: 100dvh; background: var(--bg-main); color: var(--text-main); font-family: 'Inter', sans-serif; overflow: hidden; display: flex; width: 100vw; }
 
   /* Premium Light System Custom Scrollbars */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -32,8 +32,8 @@
   ::-webkit-scrollbar-thumb { background: #dedbd3; border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: #cbd3cb; }
 
-  /* Navigation Sidebar Layout */
-  .sidebar { width: 260px; flex-shrink: 0; background: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 16px 12px; z-index: 40; position: relative; transition: transform 0.25s ease; }
+  /* Navigation Sidebar Layout - Set to comfortable ChatGPT desktop standard width */
+  .sidebar { width: 280px; flex-shrink: 0; background: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 16px 12px; z-index: 40; position: relative; transition: transform 0.25s ease; }
   
   .brand-header { display: flex; align-items: center; gap: 8px; font-family: 'Source Serif 4', serif; font-size: 21px; font-weight: 600; color: var(--text-main); margin-bottom: 20px; padding: 4px 8px; }
   .brand-logo { color: var(--accent-color); font-size: 22px; }
@@ -68,22 +68,23 @@
   .menu-item:hover { background: rgba(255,255,255,0.02); color: var(--text-main); }
   .menu-divider { height: 1px; background: var(--border-color); margin: 4px 0; }
 
-  /* Main View Container Layout Port Workspace */
+  /* Main View Container Layout Port Workspace - Stretches fluidly across remaining PC viewport width */
   .main { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100dvh; background: var(--bg-main); position: relative; align-items: center; width: 100%; }
   
-  .topbar { width: 100%; flex-shrink: 0; display: flex; align-items: center; padding: 0 40px; min-height: 56px; }
-  .menu-toggle-btn { background: none; border: none; font-size: 20px; color: var(--text-secondary); cursor: pointer; display: none; }
+  /* Topbar contains standard layout hamburger toggle button for fluid layouts */
+  .topbar { width: 100%; flex-shrink: 0; display: flex; align-items: center; padding: 0 24px; min-height: 56px; }
+  .menu-toggle-btn { background: none; border: none; font-size: 22px; color: var(--text-secondary); cursor: pointer; display: none; }
   .menu-toggle-btn:hover { color: var(--text-main); }
 
-  /* Continuous Workspace Viewport - Max Width Expanded to Eliminate Vacant Gaps */
+  /* Continuous Workspace Viewport Container - Expanded on PC to span full available width cleanly */
   .chat-scroll { flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; width: 100%; -webkit-overflow-scrolling: touch; }
-  .chat-col { width: 100%; max-width: 100%; padding: 20px 60px; display: flex; flex-direction: column; gap: 36px; flex: 1; }
+  .chat-col { width: 100%; max-width: 100%; padding: 20px 40px; display: flex; flex-direction: column; gap: 36px; flex: 1; }
 
-  /* Elegant Header Dashboard Layout */
+  /* Elegant Header Dashboard Layout Dashboard Viewport */
   .welcome-state { margin: auto; text-align: center; width: 100%; max-width: 1200px; padding: 40px 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
   .welcome-title { font-family: 'Source Serif 4', serif; font-size: 38px; font-weight: 400; color: var(--text-main); margin-bottom: 36px; letter-spacing: -0.01em; }
   
-  /* Horizontal Grid Suggestion Matrix - Stretches beautifully on Desktop */
+  /* Horizontal Grid Suggestion Matrix - Stretches side to side perfectly on desktop viewports */
   .suggestion-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; width: 100%; margin-top: 10px; }
   .suggestion-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; text-align: left; cursor: pointer; transition: background 0.2s, border-color 0.2s, transform 0.1s; display: flex; flex-direction: column; gap: 8px; justify-content: space-between; min-height: 130px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
   .suggestion-card:hover { background: var(--bg-main); border-color: var(--text-dim); transform: translateY(-1px); }
@@ -92,8 +93,8 @@
   .suggestion-text { font-size: 14.5px; font-weight: 500; color: var(--text-main); }
   .suggestion-sub { font-size: 12.5px; color: var(--text-dim); line-height: 1.4; }
 
-  /* Message Stream Blocks Rendering Structures */
-  .msg-container { display: flex; flex-direction: column; width: 100%; animation: textReveal 0.2s ease-out; }
+  /* Message Stream Blocks Rendering Structures - Set to standard premium reading width bounds */
+  .msg-container { display: flex; flex-direction: column; width: 100%; max-width: 1150px; margin: 0 auto; animation: textReveal 0.2s ease-out; }
   @keyframes textReveal { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: translateY(0); } }
   
   .msg-sender-label { font-size: 12px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -102,9 +103,9 @@
   .msg-row { display: flex; width: 100%; }
   .msg-row.user { justify-content: flex-end; }
   
-  /* Serif Typographic Engine Layout - Takes Full Available Column Width */
+  /* Serif Typographic Engine Layout */
   .msg { width: 100%; font-family: 'Source Serif 4', Georgia, serif; font-size: 16.5px; line-height: 1.68; color: var(--text-main); word-wrap: break-word; }
-  .msg-row.user .msg { max-width: 75%; font-family: 'Inter', sans-serif; font-size: 15px; background: var(--bubble-user); padding: 12px 18px; border-radius: 18px; color: var(--text-main); line-height: 1.5; }
+  .msg-row.user .msg { max-width: 85%; font-family: 'Inter', sans-serif; font-size: 15px; background: var(--bubble-user); padding: 12px 18px; border-radius: 18px; color: var(--text-main); line-height: 1.5; }
 
   /* Clean Markdown Block Render Alignment Specifications */
   .msg h1, .msg h2, .msg h3 { font-family: 'Source Serif 4', serif; margin: 1.2em 0 0.5em; font-weight: 600; color: var(--text-main); line-height: 1.3; }
@@ -130,9 +131,9 @@
   .streaming-cursor::after { content: "▋"; animation: flashCursor 0.8s step-end infinite; color: var(--accent-color); margin-left: 2px; }
   @keyframes flashCursor { 50% { opacity: 0; } }
 
-  /* Expanded Input Processing Block stretches gracefully side-to-side */
-  .composer-wrap { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; width: 100%; padding: 0 60px 32px; background: linear-gradient(180deg, transparent 0%, var(--bg-main) 35%); z-index: 30; }
-  .composer-container { width: 100%; max-width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 28px; padding: 16px 22px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); position: relative; transition: border-color 0.2s, box-shadow 0.2s; }
+  /* Expanded Input Terminal Container - Formatted to 1200px Max-Width Standard for Widescreen Framework Layouts */
+  .composer-wrap { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; width: 100%; padding: 0 40px 32px; background: linear-gradient(180deg, transparent 0%, var(--bg-main) 35%); z-index: 30; }
+  .composer-container { width: 100%; max-width: 1200px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 28px; padding: 16px 22px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); position: relative; transition: border-color 0.2s, box-shadow 0.2s; }
   .composer-container:focus-within { border-color: var(--text-dim); box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
   
   .composer-container textarea { width: 100%; border: none; outline: none; resize: none; font-family: inherit; font-size: 15.5px; line-height: 1.5; max-height: 240px; background: transparent; color: var(--text-main); padding-bottom: 44px; }
@@ -150,7 +151,7 @@
   .send-action-btn:disabled { background: var(--border-color); color: var(--text-dim); cursor: not-allowed; transform: none; }
   .send-action-btn:not(:disabled):hover { background: var(--accent-color); color: #fff; transform: scale(1.03); }
 
-  /* Overlay Modal Framework Panel */
+  /* Overlay Modal Preferences Framework Panel */
   .modal-overlay { position: fixed; inset: 0; background: var(--overlay-color); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(2px); }
   .modal-overlay.open { display: flex; }
   .modal-frame { background: var(--bg-panel); border: 1px solid var(--border-color); width: 100%; max-width: 540px; border-radius: 16px; box-shadow: 0 16px 36px rgba(0,0,0,0.08); display: flex; flex-direction: column; overflow: hidden; animation: modalPop 0.15s ease-out; }
@@ -169,23 +170,39 @@
   .action-danger-btn { background: #c94a4a; border: none; color: white; padding: 10px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; text-align: center; }
   .action-danger-btn:hover { background: #b03f3f; }
 
-  .backdrop-shield { position: fixed; inset: 0; background: transparent; z-index: 35; opacity: 0; pointer-events: none; }
-  .backdrop-shield.active { pointer-events: auto; }
+  /* Backdrop Overlay Shield for Mobile/Tablet menu triggers */
+  .backdrop-shield { position: fixed; inset: 0; background: var(--overlay-color); z-index: 35; display: none; opacity: 0; transition: opacity 0.2s ease; }
+  .backdrop-shield.active { display: block; opacity: 1; }
 
+  /* HIGH FIDELITY ADAPTIVE RESPONSIVE LAYOUT BREAKPOINTS (ChatGPT-Style Architecture) */
   @media (max-width: 1024px) {
-    .suggestion-grid { grid-template-columns: repeat(2, 1fr); }
+    /* TABLET WORKSPACE ADAPTER */
+    .sidebar { position: fixed; inset: 0 auto 0 0; transform: translateX(-100%); width: 280px; box-shadow: none; }
+    .sidebar.open { transform: translateX(0); box-shadow: 8px 0 24px rgba(0,0,0,0.04); }
+    .menu-toggle-btn { display: block; }
+    .topbar { padding: 0 24px; min-height: 56px; }
+    .composer-wrap { padding: 0 24px 24px; }
+    .chat-col { padding: 16px 24px; gap: 28px; }
+    .msg-container { max-width: 100%; }
+    .msg-row.user .msg { max-width: 85%; }
+    .suggestion-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   }
 
   @media (max-width: 760px) {
-    .sidebar { position: fixed; inset: 0 auto 0 0; transform: translateX(-100%); width: 270px; }
-    .sidebar.open { transform: translateX(0); box-shadow: 8px 0 24px rgba(0,0,0,0.05); }
-    .menu-toggle-btn { display: block; }
-    .topbar { padding: 0 16px; }
-    .composer-wrap { padding: 0 16px 16px; }
-    .chat-col { padding: 16px 16px; gap: 24px; }
-    .msg-row.user .msg { max-width: 90%; }
+    /* MOBILE WORKSPACE ADAPTER */
+    .sidebar { width: 270px; }
+    .topbar { padding: 0 16px; min-height: 48px; }
+    .menu-toggle-btn { display: block; margin-top: 4px; }
+    .composer-wrap { padding: 0 12px 16px; }
+    .composer-container { border-radius: 20px; padding: 12px 16px; }
+    .composer-container textarea { padding-bottom: 40px; font-size: 15px; }
+    .composer-actions-bar { bottom: 10px; left: 16px; right: 16px; }
+    .chat-col { padding: 12px 16px; gap: 24px; }
+    .msg-container { max-width: 100%; }
+    .msg-row.user .msg { max-width: 92%; padding: 10px 14px; font-size: 14.5px; }
+    .msg { font-size: 15.5px; }
     .suggestion-grid { grid-template-columns: 1fr; gap: 8px; }
-    .welcome-title { font-size: 28px; margin-bottom: 24px; }
+    .welcome-title { font-size: 26px; margin-bottom: 20px; padding: 0 8px; }
   }
 </style>
 </head>
@@ -242,7 +259,7 @@
         
         <div class="composer-actions-bar">
           <div class="composer-left-tools">
-            <button class="tool-pill-btn" id="attachBtn" title="Attach external file content metadata">
+            <button class="tool-pill-btn" id="attachBtn" title="Attach external file context metadata">
               <span>📎</span><span style="font-size: 12px;">Attach</span>
             </button>
             <input type="file" id="fileInput" accept=".txt,.md,.csv,.pdf" style="display:none;">
@@ -276,7 +293,7 @@
         <div class="setting-row">
           <div class="setting-info">
             <label>System Workspace Language</label>
-            <div class="setting-subtext">Adjust the programmatic tracking strings layout rules</div>
+            <div class="setting-subtext">Adjust the workspace localization values</div>
           </div>
           <select class="form-select-control"><option>English (US)</option></select>
         </div>
@@ -414,19 +431,20 @@
     renderLoggedOutState();
   }
 
+  // Adaptive Unsigned/Logged-Out Interface Layout State Configurator
   function renderLoggedOutState() {
     chatCol.innerHTML = `
       <div class="welcome-state">
         <h1 class="welcome-title">Welcome to Pratham AI</h1>
-        <p style="color: var(--text-secondary); font-size: 15px; margin-bottom: 24px; line-height: 1.65;">Sign in to save your conversation history, access advanced processing nodes, and cloud sync workspaces data files.</p>
-        <div id="googleSignInContainerMain" style="display:flex; justify-content:center;"></div>
+        <p style="color: var(--text-secondary); font-size: 15.5px; margin-bottom: 28px; line-height: 1.65; max-width: 480px; margin-left: auto; margin-right: auto;">Sign in to sync conversations across devices, access advanced history processing, and upload files context strings.</p>
+        <div id="googleSignInContainerMain" style="display:flex; justify-content:center; margin-bottom: 12px;"></div>
       </div>
     `;
     google.accounts.id.renderButton(document.getElementById("googleSignInContainerMain"), { theme: "filled_blue", size: "large", text: "continue_with" });
     document.getElementById('googleSignInContainer').style.display = 'block';
     google.accounts.id.renderButton(document.getElementById("googleSignInContainer"), { theme: "outline", size: "medium" });
     input.disabled = true;
-    input.placeholder = "Sign in to send a message...";
+    input.placeholder = "Sign in to sync conversations across devices.";
   }
 
   function renderNewChatState() {
@@ -502,7 +520,7 @@
       });
       item.appendChild(delBtn);
       
-      spanText.addEventListener('click', () => { loadConversation(c.id); if(window.innerWidth <= 760) closeSidebar(); }); 
+      spanText.addEventListener('click', () => { loadConversation(c.id); if(window.innerWidth <= 1024) closeSidebar(); }); 
       list.appendChild(item);
     });
   }
@@ -512,7 +530,7 @@
     localStorage.removeItem('pratham_active_convo_id');
     renderNewChatState();
     Array.from(document.getElementById('convoList').children).forEach(el => el.classList.remove('active'));
-    if(window.innerWidth <= 760) closeSidebar(); 
+    if(window.innerWidth <= 1024) closeSidebar(); 
   });
 
   async function loadConversation(id) {
@@ -535,6 +553,7 @@
     
     const container = document.createElement('div'); container.className = 'msg-container';
     
+    // Core Identity Isolation: Enforcing fixed structural string labels for the UI
     const senderLabel = document.createElement('div');
     senderLabel.className = `msg-sender-label ${role === 'user' ? 'user' : 'model'}`;
     senderLabel.textContent = role === 'user' ? 'You' : 'Pratham AI';
@@ -553,7 +572,7 @@
     return bubble;
   }
 
-  // Real-Time Server-Sent Events Processing Engine Loop
+  // Core Real-Time Server-Sent Events Processing Engine Loop
   async function handleSend() {
     let text = input.value.trim();
     if (!text || busy) return;
@@ -641,7 +660,7 @@
               throw new Error(parsed.text);
             }
           } catch (e) {
-            // Programmatic split boundary safety catches
+            // Processing fallback handles incomplete parse steps across packet gaps cleanly
           }
         }
       }
