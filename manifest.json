@@ -5,10 +5,10 @@
   "description": "AI assistant powered web application by Pratham.",
   "start_url": "/",
   "scope": "/",
-  "display": "standalone",
+  "display": "fullscreen",
   "display_override": [
     "window-controls-overlay",
-    "standalone",
+    "fullscreen",
     "minimal-ui"
   ],
   "background_color": "#04070d",
