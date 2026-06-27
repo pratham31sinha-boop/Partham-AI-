@@ -57,20 +57,6 @@
       ]
     }
   ],
-  "screenshots": [
-    {
-      "src": "https://via.placeholder.com/1080x1920.png?text=Mobile+View",
-      "sizes": "1080x1920",
-      "type": "image/png",
-      "form_factor": "narrow"
-    },
-    {
-      "src": "https://via.placeholder.com/1920x1080.png?text=Desktop+View",
-      "sizes": "1920x1080",
-      "type": "image/png",
-      "form_factor": "wide"
-    }
-  ],
   "file_handlers": [
     {
       "action": "/",
