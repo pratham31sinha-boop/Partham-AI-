@@ -614,9 +614,17 @@
     } catch(e){}
   }
 
-  function addMessage(role, text) {
+function addMessage(role, text) {
     const currentEmpty = chatCol.querySelector('.welcome-state'); if (currentEmpty) currentEmpty.remove();
     
+    // Filter out the STORE_MEMORY tags completely
+    let cleanText = text;
+    if (role === 'model') {
+       cleanText = text.replace(/\[STORE_MEMORY:[^\]]*\]/g, '').trim();
+       // If the message was ONLY a memory tag, don't render an empty bubble
+       if (cleanText === '') return null; 
+    }
+
     const container = document.createElement('div'); container.className = 'msg-container';
     
     const senderLabel = document.createElement('div');
@@ -628,9 +636,9 @@
     const bubble = document.createElement('div'); bubble.className = 'msg';
     
     if (role === 'model' && typeof marked !== 'undefined') { 
-      bubble.innerHTML = DOMPurify.sanitize(marked.parse(text));
+      bubble.innerHTML = DOMPurify.sanitize(marked.parse(cleanText));
     } else { 
-      bubble.textContent = text; 
+      bubble.textContent = cleanText; 
     }
     
     row.appendChild(bubble); container.appendChild(row); chatCol.appendChild(container);
@@ -704,7 +712,7 @@
               localStorage.setItem('pratham_active_convo_id', activeConvoId);
               syncConversations();
             } 
-            else if (parsed.type === "token") {
+           else if (parsed.type === "token") {
               if (isFirstChunk) {
                 textBubbleNode.innerHTML = ""; 
                 textBubbleNode.classList.add("streaming-cursor");
@@ -713,10 +721,13 @@
               
               assistantChunkAccumulator += parsed.text;
               
+              // Real-time filter: hides [STORE_MEMORY: ... ] even before the closing ] arrives!
+              let displayString = assistantChunkAccumulator.replace(/\[STORE_MEMORY:[^\]]*(\]|$)/g, '');
+              
               if (typeof marked !== 'undefined') {
-                textBubbleNode.innerHTML = DOMPurify.sanitize(marked.parse(assistantChunkAccumulator));
+                textBubbleNode.innerHTML = DOMPurify.sanitize(marked.parse(displayString));
               } else {
-                textBubbleNode.textContent = assistantChunkAccumulator;
+                textBubbleNode.textContent = displayString;
               }
               document.getElementById('chatScrollContainer').scrollTop = document.getElementById('chatScrollContainer').scrollHeight;
             }
