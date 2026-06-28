@@ -206,7 +206,7 @@
 
   <div class="sidebar" id="sidebar">
     <div class="brand-header">
-      <img src="assets/logo.png" alt="Pratham AI Logo" class="brand-logo-img">
+      <img src="assets/logo.png" alt="Pratham AI Logo" class="brand-logo-img" onerror="this.style.display='none';">
       <span>Pratham AI</span>
     </div>
     
@@ -671,6 +671,19 @@
         videoLoader.play().catch(() => {});
       }
     });
+    
+    // Fallback if video files don't exist yet
+    videoLoader.addEventListener('error', () => {
+      videoLoader.style.display = 'none';
+      if(textBubbleNode.innerHTML === "" || textBubbleNode.contains(videoLoader)) {
+        const textFallback = document.createElement('div');
+        textFallback.className = 'thinking-state';
+        textFallback.innerHTML = 'Thinking<div class="dot-flashing"></div>';
+        textFallback.id = 'fallbackLoadingDots';
+        textBubbleNode.appendChild(textFallback);
+      }
+    });
+    
     textBubbleNode.appendChild(videoLoader);
 
     let assistantChunkAccumulator = "";
@@ -704,36 +717,39 @@
           let cleanLine = line.trim();
           if (!cleanLine || !cleanLine.startsWith("data:")) continue;
 
+          let parsed = null;
           try {
             const rawJson = cleanLine.replace(/^data:\s*/, "");
-            const parsed = JSON.parse(rawJson);
+            parsed = JSON.parse(rawJson);
+          } catch (e) {
+            continue; 
+          }
 
-            if (parsed.type === "metadata") {
-              activeConvoId = parseInt(parsed.conversation_id);
-              localStorage.setItem('pratham_active_convo_id', activeConvoId);
-              syncConversations();
-            } 
-           else if (parsed.type === "token") {
-              if (isFirstChunk) {
-                textBubbleNode.innerHTML = ""; 
-                textBubbleNode.classList.add("streaming-cursor");
-                isFirstChunk = false;
-              }
-              
-              assistantChunkAccumulator += parsed.text;
-              let displayString = assistantChunkAccumulator.replace(/\[STORE_MEMORY:[^\]]*(\]|$)/g, '');
-              
-              if (typeof marked !== 'undefined') {
-                textBubbleNode.innerHTML = DOMPurify.sanitize(marked.parse(displayString));
-              } else {
-                textBubbleNode.textContent = displayString;
-              }
-              document.getElementById('chatScrollContainer').scrollTop = document.getElementById('chatScrollContainer').scrollHeight;
+          if (parsed.type === "metadata") {
+            activeConvoId = parseInt(parsed.conversation_id);
+            localStorage.setItem('pratham_active_convo_id', activeConvoId);
+            syncConversations();
+          } 
+          else if (parsed.type === "token") {
+            if (isFirstChunk) {
+              textBubbleNode.innerHTML = ""; 
+              textBubbleNode.classList.add("streaming-cursor");
+              isFirstChunk = false;
             }
-            else if (parsed.type === "error") {
-              throw new Error(parsed.text);
+            
+            assistantChunkAccumulator += parsed.text;
+            let displayString = assistantChunkAccumulator.replace(/\[STORE_MEMORY:[^\]]*(\]|$)/g, '');
+            
+            if (typeof marked !== 'undefined') {
+              textBubbleNode.innerHTML = DOMPurify.sanitize(marked.parse(displayString));
+            } else {
+              textBubbleNode.textContent = displayString;
             }
-          } catch (e) {}
+            document.getElementById('chatScrollContainer').scrollTop = document.getElementById('chatScrollContainer').scrollHeight;
+          }
+          else if (parsed.type === "error") {
+            throw new Error(parsed.text); 
+          }
         }
       }
 
