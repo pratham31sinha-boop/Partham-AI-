@@ -2150,6 +2150,23 @@ sys.stderr = WebConsole(is_error=True)
             // High-frequency runtime safety daemon loop to handle view transitions instantly
             setInterval(validateAuthenticationStatus, 100);
         })();
+
+        // ==============================================================================
+        // GLOBAL FETCH AUTOMATED ROUTING PATCH
+        // Intercepts structural 404 deadlocks and anchors absolute targeting to port 5000 during local engineering environments
+        // ==============================================================================
+        (function() {
+            const nativeFetch = window.fetch;
+            window.fetch = function(input, init) {
+                let pathTarget = input;
+                if (typeof input === 'string' && input.startsWith('/')) {
+                    const localExecutionEnvironment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                    const targetEngineHost = localExecutionEnvironment ? 'http://127.0.0.1:5000' : window.location.origin;
+                    pathTarget = targetEngineHost + input;
+                }
+                return nativeFetch(pathTarget, init);
+            };
+        })();
     </script>
 </body>
 </html>
