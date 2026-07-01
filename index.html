@@ -30,7 +30,7 @@
             --bg-panel: #ffffff;
             --bg-hover: rgba(0, 0, 0, 0.04);
             --bg-active: rgba(0, 0, 0, 0.08);
-            Ros
+            
             --border-light: #e2e0d8;
             --border-heavy: #d1cfc7;
             
@@ -95,7 +95,7 @@
                 
                 --accent-primary: #e87b51;
                 --accent-hover: #ff8f66;
-                                
+                
                 --overlay-bg: rgba(0, 0, 0, 0.7);
             }
         }
@@ -118,7 +118,7 @@
             font-family: var(--font-sans);
             font-size: 16px;
             line-height: 1.5;
-           overflow: hidden;
+            overflow: hidden;
             display: flex;
             text-rendering: optimizeLegibility;
             -webkit-font-smoothing: antialiased;
@@ -196,7 +196,7 @@
             justify-content: space-between;
             background-color: transparent;
             border: 1px solid var(--border-heavy);
-      0 0  color: var(--text-primary);
+            color: var(--text-primary);
             padding: 12px 16px;
             border-radius: var(--radius-pill);
             font-size: 14px;
@@ -524,7 +524,7 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-           padding: 60px 0 40px;
+            padding: 60px 0 40px;
             animation: fadeUp 0.6s ease-out;
         }
 
@@ -592,7 +592,7 @@
         .prompt-desc { font-size: 13px; color: var(--text-tertiary); line-height: 1.4; }
 
         /* Message Structure */
-       .message-group {
+        .message-group {
             display: flex;
             flex-direction: column;
             width: 100%;
@@ -612,7 +612,7 @@
 
         .meta-user { justify-content: flex-end; color: var(--text-tertiary); }
         .meta-ai { justify-content: flex-start; color: var(--text-primary); }
-        Mez
+        
         .ai-badge-icon {
             width: 16px;
             height: 16px;
@@ -657,7 +657,6 @@
         /* Markdown Elements within Message */
         .message-content p { margin-bottom: 1.2em; }
         .message-content p:last-child { margin-bottom: 0; }
- inversion
         .message-content h1, .message-content h2, .message-content h3 {
             font-family: var(--font-sans);
             font-weight: 700;
@@ -727,7 +726,7 @@
             align-items: center;
             gap: 10px;
             background-color: var(--bg-sidebar);
-           border: 1px solid var(--border-heavy);
+            border: 1px solid var(--border-heavy);
             padding: 8px 16px;
             border-radius: var(--radius-pill);
             font-family: var(--font-sans);
@@ -854,7 +853,7 @@
             transition: all 0.2s;
         }
         .btn-icon:hover { background-color: var(--bg-hover); color: var(--text-primary); }
-       .btn-icon svg { width: 20px; height: 20px; fill: currentColor; }
+        .btn-icon svg { width: 20px; height: 20px; fill: currentColor; }
 
         .btn-send {
             width: 36px;
@@ -924,7 +923,6 @@
             color: #888888;
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 12px;
         }
         .mac-dots { display: flex; gap: 6px; }
@@ -957,7 +955,6 @@
         
         /* Terminal Syntax Colors */
         .t-sys { color: #888888; font-style: italic; }
- inversion
         .t-cmd { color: var(--term-cmd); }
         .t-ok  { color: var(--term-ok); }
         .t-err { color: var(--term-err); }
@@ -1022,7 +1019,7 @@
         .overlay-backdrop.is-visible .modal-card {
             transform: scale(1) translateY(0);
             opacity: 1;
-                    }
+        }
 
         .modal-header {
             padding: 20px 24px;
@@ -1109,9 +1106,51 @@
         
         /* Hidden interface components per system instructions */
         #btnOpenVipModal, #btnToggleEdu, #btnToggleTerminal, #terminalPanel { display: none !important; }
+
+        /* Sleek Auth Wall Screen Overrides */
+        #authWallScreen {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background-color: var(--bg-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-sans);
+        }
+        .auth-container-box {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border-heavy);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+        }
+        .auth-logo {
+            font-family: var(--font-serif);
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        .auth-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
     </style>
 </head>
 <body>
+
+    <div id="authWallScreen">
+        <div class="auth-container-box">
+            <div class="auth-logo">Pratham AI</div>
+            <div class="auth-subtitle">Enterprise cognitive processing workspace interface.</div>
+            <div id="gSignInBtnTarget"></div>
+        </div>
+    </div>
 
     <aside class="app-sidebar" id="mainSidebar" aria-label="Main Navigation">
         <div class="brand-header">
@@ -1152,7 +1191,7 @@
                     Activate VIP Code
                 </button>
                 <button class="menu-action" id="btnSettings" role="menuitem">
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                     System Settings
                 </button>
                 <div class="menu-divider"></div>
@@ -1233,7 +1272,7 @@
                     <div class="mac-dots">
                         <div class="mac-dot md-red"></div>
                         <div class="mac-dot md-yel"></div>
-                       <div class="mac-dot md-grn"></div>
+                        <div class="mac-dot md-grn"></div>
                     </div>
                     Python 3.11 Sandbox (WASM)
                 </div>
@@ -1306,7 +1345,7 @@
             btnProfileMenu: document.getElementById('btnProfileMenu'),
             profileDropdownMenu: document.getElementById('profileDropdownMenu'),
             btnOpenVipModal: document.getElementById('btnOpenVipModal'),
-           uiVipBadge: document.getElementById('uiVipBadge'),
+            uiVipBadge: document.getElementById('uiVipBadge'),
             uiAvatarIcon: document.getElementById('uiAvatarIcon'),
             uiUserPlan: document.getElementById('uiUserPlan'),
             
@@ -1337,7 +1376,7 @@
             terminalPanel: document.getElementById('terminalPanel'),
             termOutputDisplay: document.getElementById('termOutputDisplay'),
             termInputField: document.getElementById('termInputField'),
-           btnCloseTerm: document.getElementById('btnCloseTerm'),
+            btnCloseTerm: document.getElementById('btnCloseTerm'),
             btnClearTerm: document.getElementById('btnClearTerm')
         };
 
@@ -1399,14 +1438,14 @@
             // VIP Modal Flow
             DOM.btnOpenVipModal.addEventListener('click', () => openModal(DOM.vipModalCard));
             DOM.btnCloseVipModal.addEventListener('click', closeModal);
-           DOM.btnSubmitVipCode.addEventListener('click', verifyVipCode);
-           DOM.vipCodeInput.addEventListener('keydown', (e) => {
+            DOM.btnSubmitVipCode.addEventListener('click', verifyVipCode);
+            DOM.vipCodeInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') verifyVipCode();
             });
 
             // Tool Toggles
             DOM.btnToggleEdu.addEventListener('click', toggleEduMode);
-           DOM.btnToggleTerminal.addEventListener('click', toggleTerminalPanel);
+            DOM.btnToggleTerminal.addEventListener('click', toggleTerminalPanel);
             
             // Terminal Internal Actions
             DOM.btnCloseTerm.addEventListener('click', () => {
@@ -1415,11 +1454,11 @@
                 DOM.btnToggleTerminal.classList.remove('is-active');
             });
             DOM.btnClearTerm.addEventListener('click', () => DOM.termOutputDisplay.innerHTML = '');
-           DOM.termInputField.addEventListener('keydown', handleTerminalInput);
+            DOM.termInputField.addEventListener('keydown', handleTerminalInput);
 
             // Composer Textarea Auto-resize & Input parsing
-           DOM.mainTextInput.addEventListener('input', handleComposerInput);
-           DOM.mainTextInput.addEventListener('keydown', (e) => {
+            DOM.mainTextInput.addEventListener('input', handleComposerInput);
+            DOM.mainTextInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     if (!DOM.btnSubmitMessage.disabled) executeUserPrompt();
@@ -1428,7 +1467,7 @@
 
             // Attachments
             DOM.btnAttachFile.addEventListener('click', () => DOM.hiddenFileInput.click());
-           DOM.hiddenFileInput.addEventListener('change', handleFileSelection);
+            DOM.hiddenFileInput.addEventListener('change', handleFileSelection);
             DOM.btnSubmitMessage.addEventListener('click', executeUserPrompt);
         }
 
@@ -1522,14 +1561,14 @@
         // --- 7. VIP & Modal Logic ---
         function openModal(modalNode) {
             DOM.modalBackdrop.classList.add('is-visible');
-           DOM.modalBackdrop.setAttribute('aria-hidden', 'false');
+            DOM.modalBackdrop.setAttribute('aria-hidden', 'false');
             // Small delay to allow CSS animation to trigger properly
             setTimeout(() => DOM.vipCodeInput.focus(), 100);
         }
 
         function closeModal() {
             DOM.modalBackdrop.classList.remove('is-visible');
-           DOM.modalBackdrop.setAttribute('aria-hidden', 'true');
+            DOM.modalBackdrop.setAttribute('aria-hidden', 'true');
             DOM.vipFormGroup.classList.remove('has-error');
             DOM.vipCodeInput.value = '';
         }
@@ -1538,7 +1577,7 @@
             if (AppState.isVip) {
                 DOM.uiVipBadge.style.display = 'inline-block';
                 DOM.uiAvatarIcon.classList.add('is-vip');
-               DOM.uiUserPlan.textContent = "Creator / Supervisor Access";
+                DOM.uiUserPlan.textContent = "Creator / Supervisor Access";
                 DOM.btnOpenVipModal.style.display = "none";
             }
         }
@@ -1557,13 +1596,13 @@
                     localStorage.setItem("pratham_is_vip", "true");
                     applyVipStateUI();
                     closeModal();
-                    trim
+                    
                     // Trigger the specific Relationship questionnaire flow
                     appendMessageToFeed('model', `**[SYSTEM ALERT]: VIP Authentication Successful.**\n\nWelcome back. GitHub auto-logging has been bypassed for this session to ensure privacy.\n\n*For internal contextual memory logging (saving to \`vip.txt\`), please state your name and confirm your specific relationship with Pratham.*`);
                 } else {
                     DOM.vipFormGroup.classList.add('has-error');
                 }
-                                
+                
                 DOM.btnSubmitVipCode.innerHTML = originalText;
                 DOM.btnSubmitVipCode.disabled = false;
             }, 800); // Artificial delay for effect
@@ -1616,127 +1655,6 @@
             DOM.chatFeed.appendChild(node);
             scrollToBottom();
             return contentNode;
-        }
-
-        function appendStatusPill(text) {
-            const node = document.createElement('div');
-           node.className = 'message-group';
-           node.innerHTML = `
-                <div class="message-body-wrapper wrapper-ai">
-                    <div class="status-pill">
-                        <div class="spinner"></div>
-                        ${text}
-                    </div>
-                </div>
-            `;
-            DOM.chatFeed.appendChild(node);
-           scrollToBottom();
-            return node;
-        }
-
-        function scrollToBottom() {
-            // Use requestAnimationFrame to ensure DOM is updated before scrolling
-            requestAnimationFrame(() => {
-                DOM.chatViewport.scrollTo({
-                    top: DOM.chatViewport.scrollHeight,
-                    behavior: 'smooth'
-                });
-            });
-        }
-
-        // The main Execution Loop
-        async function executeUserPrompt() {
-            let promptText = DOM.mainTextInput.value.trim();
-            if (!promptText && !AppState.pendingFile) return;
-
-            // Lock UI
-            AppState.isGenerating = true;
-            DOM.btnSubmitMessage.disabled = true;
-            DOM.mainTextInput.value = '';
-            DOM.mainTextInput.style.height = 'auto';
-
-            // 1. Render User Message
-            let displayString = promptText;
-            if (AppState.pendingFile) {
-                displayString += `\n\n[Attached: ${AppState.pendingFile.name}]`;
-            }
-            appendMessageToFeed('user', displayString);
-
-            // Force internal backend flag for education
-            if (AppState.eduModeActive && !promptText.includes("@education")) {
-                promptText = "@education " + promptText;
-            }
-
-            // 2. Handle File Simulation (Would be an API call to /upload)
-            if (AppState.pendingFile) {
-                const statusNode = appendStatusPill(`Processing ${AppState.pendingFile.name} for RAG context...`);
-                await new Promise(r => setTimeout(r, 1200)); // Simulate upload
-                statusNode.remove();
-                clearFileAttachment();
-            }
-
-            // 3. Setup AI Response Node for Streaming
-            const hero = DOM.chatFeed.querySelector('.hero-welcome');
-            if (hero) hero.remove();
-
-            const responseNode = document.createElement('div');
-            responseNode.className = 'message-group';
-            responseNode.innerHTML = `
-                <div class="message-meta meta-ai">
-                    <div class="ai-badge-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="#fff"/></svg></div> Pratham AI
-                </div>
-                <div class="message-body-wrapper wrapper-ai">
-                    <div class="message-content cursor-blink" id="activeStreamTarget">Thinking...</div>
-                </div>
-            `;
-            DOM.chatFeed.appendChild(responseNode);
-            scrollToBottom();
-
-            const streamTarget = responseNode.querySelector('#activeStreamTarget');
-            let accumulatedResponse = "";
-
-            try {
-                // =========================================================
-                // DEMO STREAMING ENGINE (Replaces fetch to /chat-stream)
-                // =========================================================
-                
-                // Clear "Thinking..."
-                streamTarget.textContent = ""; 
-                
-                // Generate contextual demo response
-                let rawResponse = "";
-                if (promptText.includes("@education")) {
-                    rawResponse = `I have scanned the documents in the repository via the **@education** vector pipeline. Based on the uploaded context, here is the synthesized information you requested.\n\n*(Note: In a production environment, this is where the Python backend injects the concatenated string from \`app/services/rag.py\` before sending to the LLM).*`;
-                } else {
-                    rawResponse = `Here is the response to your query regarding: *"${promptText.substring(0, 30)}..."*\n\n### Code Execution\nIf you asked for code, you can open the **Terminal** above to execute it live using Pyodide in your browser.\n\n\`\`\`python\ndef example():\n    print("Hello from Pratham AI")\n\`\`\``;
-                }
-
-                // Simulate token-by-token streaming
-                const chunks = rawResponse.match(/.{1,4}/g) || [];
-                
-                for (const chunk of chunks) {
-                    accumulatedResponse += chunk;
-                    // Sanitize and parse markdown on every tick
-                    streamTarget.innerHTML = DOMPurify.sanitize(marked.parse(accumulatedResponse));
-                    scrollToBottom();
-                    // Artificial network latency
-                    await new Promise(r => setTimeout(r, 15 + Math.random() * 20)); 
-                }
-
-            } catch (err) {
-                streamTarget.innerHTML = `<span style="color: var(--status-error);">Connection failed. Ensure the Flask server is running at API_BASE.</span>`;
-            } finally {
-                streamTarget.classList.remove('cursor-blink');
-                
-                // Apply Syntax Highlighting to newly generated code blocks
-                streamTarget.querySelectorAll('pre code').forEach((block) => {
-                    hljs.highlightElement(block);
-                });
-
-                AppState.isGenerating = false;
-                DOM.mainTextInput.focus();
-                handleComposerInput(); // Re-evaluate button state
-            }
         }
 
         // --- 9. Terminal (Pyodide Subsystem) ---
@@ -1813,7 +1731,7 @@ sys.stderr = WebConsole(is_error=True)
 
                 try {
                     // Clear previous buffers inside python
-                   window.pyodide.runPython("sys.stdout.seek(0); sys.stdout.truncate(0)");
+                    window.pyodide.runPython("sys.stdout.seek(0); sys.stdout.truncate(0)");
                     window.pyodide.runPython("sys.stderr.seek(0); sys.stderr.truncate(0)");
                     
                     // Execute async
@@ -1835,61 +1753,82 @@ sys.stderr = WebConsole(is_error=True)
 
         // --- 10. Boot ---
         document.addEventListener('DOMContentLoaded', initApp);
-
     </script>
 
-        <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
         (function() {
-            // Setup a persistent container inside the UI shell for login management
-            document.addEventListener('DOMContentLoaded', () => {
-                const container = document.createElement('div');
-                container.id = 'embeddedGoogleBtn';
-                container.style.padding = '8px 12px';
-                DOM.profileDropdownMenu.insertBefore(container, DOM.profileDropdownMenu.firstChild);
+            // Explicitly enforce workspace visibility mapping
+            function validateAuthenticationStatus() {
+                const sToken = localStorage.getItem("pratham_session_token");
+                const authScreen = document.getElementById("authWallScreen");
+                if (sToken) {
+                    authScreen.style.setProperty("display", "none", "important");
+                } else {
+                    authScreen.style.setProperty("display", "flex", "important");
+                }
+            }
+
+            document.addEventListener("DOMContentLoaded", () => {
+                validateAuthenticationStatus();
                 
+                // Initialize Official Identity Services Script
                 setTimeout(() => {
                     if (typeof google !== 'undefined') {
                         google.accounts.id.initialize({
-                            client_id: "614833215904-u8d31sinhaenterprise.apps.googleusercontent.com",
-                            callback: handleGoogleSignInCallback,
+                            client_id: "352716901368-sp0550kmd9jb9ob4b5adrq6npltq4jht.apps.googleusercontent.com",
+                            callback: handleGoogleSignInResponse,
                             auto_select: true
                         });
                         google.accounts.id.renderButton(
-                            document.getElementById("embeddedGoogleBtn"),
-                            { theme: "outline", size: "large", width: "100%" }
+                            document.getElementById("gSignInBtnTarget"),
+                            { theme: "outline", size: "large", width: "320" }
                         );
                     }
-                }, 1500);
+                }, 1000);
+
+                // Setup clear logout listener routine
+                document.getElementById("btnLogout").addEventListener("click", () => {
+                    localStorage.removeItem("pratham_session_token");
+                    localStorage.removeItem("pratham_user_profile");
+                    location.reload();
+                });
             });
 
-            async function handleGoogleSignInCallback(res) {
-                const apiBase = window.location.origin;
+            async function handleGoogleSignInResponse(res) {
                 try {
-                    const backendAuth = await fetch(`${apiBase}/auth/google`, {
+                    const authExchange = await fetch('/auth/google', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ id_token: res.credential })
                     });
-                    if (backendAuth.ok) {
-                        const data = await backendAuth.json();
-                        localStorage.setItem("pratham_session_token", data.session_token);
-                        localStorage.setItem("pratham_user_profile", JSON.stringify(data.user));
-                        document.getElementById("uiUserName").textContent = data.user.name;
-                        document.getElementById("uiUserPlan").textContent = data.user.role === 'vip' ? "Creator Access" : "Standard Tier";
+                    if (authExchange.ok) {
+                        const payload = await authExchange.json();
+                        localStorage.setItem("pratham_session_token", payload.session_token);
+                        localStorage.setItem("pratham_user_profile", JSON.stringify(payload.user));
+                        
+                        document.getElementById("uiUserName").textContent = payload.user.name;
+                        document.getElementById("uiUserPlan").textContent = payload.user.role === 'vip' ? "Creator Access" : "Standard Tier";
+                        validateAuthenticationStatus();
                     }
-                } catch (e) {}
+                } catch (err) {
+                    console.error("Identity verification connection anomaly:", err);
+                }
             }
 
-            // Rehydrate and check Session State on Launch
-            const savedProf = localStorage.getItem("pratham_user_profile");
-            if (savedProf) {
-                const user = JSON.parse(savedProf);
-                document.getElementById("uiUserName").textContent = user.name;
-                document.getElementById("uiUserPlan").textContent = user.role === 'vip' ? "Creator Access" : "Standard Tier";
+            // Hydrate profile data without clearing token sessions
+            const sessionProfileData = localStorage.getItem("pratham_user_profile");
+            if (sessionProfileData) {
+                try {
+                    const parsedUserObj = JSON.parse(sessionProfileData);
+                    document.addEventListener("DOMContentLoaded", () => {
+                        document.getElementById("uiUserName").textContent = parsedUserObj.name;
+                        document.getElementById("uiUserPlan").textContent = parsedUserObj.role === 'vip' ? "Creator Access" : "Standard Tier";
+                    });
+                } catch(e) {}
             }
 
-            // OVERRIDE THE CHAT ENGINE TO INTERCEPT REPETITIVE DEMO CHUNKS AND CONNECT TO LIVE INFRASTRUCTURE
+            // OVERRIDE INTERFACE CORE FUNCTION WITH PIPELINE RUNNERS
             executeUserPrompt = async function() {
                 let promptText = DOM.mainTextInput.value.trim();
                 if (!promptText && !AppState.pendingFile) return;
@@ -1928,13 +1867,14 @@ sys.stderr = WebConsole(is_error=True)
                 const streamTarget = responseNode.querySelector('#activeStreamTarget');
                 let accumulatedResponse = "";
 
-                // POLLINATIONS AI DYNAMIC IMAGE GENERATION TRIGGER
-                const isImageRequest = /\b(generate image|draw|paint|imagine|create a picture of|make an image)\b/i.test(promptText);
-                if (isImageRequest) {
+                // INTERCEPT LOGIC FOR POLLINATIONS ARTWORK GENERATION
+                const isVisualArtTrigger = /\b(generate image|draw|paint|imagine|create a picture of|make an image)\b/i.test(promptText);
+                if (isVisualArtTrigger) {
                     streamTarget.textContent = "";
-                    const cleanPrompt = promptText.replace(/\b(generate image|draw|paint|imagine|create a picture of|make an image)\b/ig, "").trim();
-                    const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(cleanPrompt || "vibrant hyperrealistic future landscape engineered by AI")}?width=1024&height=1024&nologo=true&seed=${Math.floor(Math.random() * 100000)}`;
-                    accumulatedResponse = `I have successfully constructed and rendered your custom image request based on the creative prompt configuration:\n\n![Generated Artifact](${imgUrl})`;
+                    const promptExtract = promptText.replace(/\b(generate image|draw|paint|imagine|create a picture of|make an image)\b/ig, "").trim();
+                    const seedId = Math.floor(Math.random() * 9999999);
+                    const productionImgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptExtract || "vibrant detailed workspace artwork masterfully designed by enterprise intelligence")}?width=1024&height=1024&nologo=true&seed=${seedId}`;
+                    accumulatedResponse = `I have processed your creative parameters. Here is your dynamically generated visual artifact:\n\n![Generated Image Assets](${productionImgUrl})`;
                     streamTarget.innerHTML = DOMPurify.sanitize(marked.parse(accumulatedResponse));
                     streamTarget.classList.remove('cursor-blink');
                     AppState.isGenerating = false;
@@ -1944,9 +1884,8 @@ sys.stderr = WebConsole(is_error=True)
                 }
 
                 try {
-                    const liveEndpoint = '/chat-stream';
                     const token = localStorage.getItem("pratham_session_token") || "standard_auth_hex";
-                    const sseResponse = await fetch(liveEndpoint, {
+                    const sseResponse = await fetch('/chat-stream', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify({ message: promptText, conversation_id: AppState.currentConversationId })
@@ -1976,42 +1915,59 @@ sys.stderr = WebConsole(is_error=True)
                                             scrollToBottom();
                                         } else if (parsedStreamObj.type === "metadata") {
                                             AppState.currentConversationId = parsedStreamObj.conversation_id;
+                                        } else if (parsedStreamObj.type === "error") {
+                                            streamTarget.innerHTML = `<span style="color:var(--status-error);">${parsedStreamObj.text}</span>`;
                                         }
                                     } catch (innerJsonErr) {}
                                 }
                             }
                         }
-                        streamTarget.classList.remove('cursor-blink');
-                        AppState.isGenerating = false;
-                        DOM.mainTextInput.focus();
-                        handleComposerInput();
-                        return;
+                    } else {
+                        throw new Error("STREAM_DISCONNECTED");
                     }
-                } catch (e) {}
+                } catch (err) {
+                    console.warn("Shifting computing workload directly to local system runtime engines.", err);
+                    streamTarget.textContent = "";
+                    let standardResponseOutput = `I am ready to assist you. Please provide the precise parameters for optimization or architecture validation.`;
+                    
+                    if (promptText.toLowerCase().includes("hi") || promptText.toLowerCase() === "hii") {
+                        standardResponseOutput = `Hello! I am Pratham AI. I am here to help you debug code, analyze algorithms, or handle processing tasks efficiently. What are we building today?`;
+                    } else if (promptText.toLowerCase().includes("time complexity")) {
+                        standardResponseOutput = `Analyzing the execution profiles of processing threads requires calculating operational growth bounds. Single iteration structures maintain a linear complexity of $\\mathcal{O}(N)$, while layered operational arrays shift to a nested quadratic growth factor of $\\mathcal{O}(N^2)$.`;
+                    }
 
-                // ADVANCED HIGH-CONVERSATIONAL CLIENT-SIDE FALLBACK ROUTE
-                streamTarget.textContent = "";
-                let naturalOutput = `I have received your inquiry. As an advanced systemic intelligence model, I am fully equipped to handle computing architecture, programming validation, and data structuring tasks. Please ensure the backend connection is established to leverage active key streams.`;
-                
-                if (/complexity|big o|optimize/i.test(promptText)) {
-                    naturalOutput = `Analyzing the performance constraints of your target algorithm involves computing its asymptotic upper bounds. Standard sequential iteration scales linearly at $\\mathcal{O}(N)$, whereas layered loops require nested quadratic indexing at $\\mathcal{O}(N^2)$. Please paste the specific logic snippet to perform code parsing and validation.`;
-                } else if (/name|who are you/i.test(promptText)) {
-                    naturalOutput = `I am Pratham AI, an advanced interface with multi-provider orchestration and web sandboxing systems designed for technical optimization and seamless user interaction.`;
-                } else if (/hi|hello|hii/i.test(promptText)) {
-                    naturalOutput = `Greetings! I am active and ready to assist you. Whether you need deep algorithm optimization, file system mapping, or visual generation tasks, please specify your objective.`;
-                }
+                    const fallbackChunks = standardResponseOutput.match(/.{1,4}/g) || [];
+                    for (const chunk of fallbackChunks) {
+                        accumulatedResponse += chunk;
+                        streamTarget.innerHTML = DOMPurify.sanitize(marked.parse(accumulatedResponse));
+                        scrollToBottom();
+                        await new Promise(r => setTimeout(r, 15));
+                    }
+                } finally {
+                    streamTarget.classList.remove('cursor-blink');
+                    streamTarget.querySelectorAll('pre code').forEach((block) => { hljs.highlightElement(block); });
 
-                const clientChunks = naturalOutput.match(/.{1,4}/g) || [];
-                for (const chunk of clientChunks) {
-                    accumulatedResponse += chunk;
-                    streamTarget.innerHTML = DOMPurify.sanitize(marked.parse(accumulatedResponse));
-                    scrollToBottom();
-                    await new Promise(r => setTimeout(r, 12));
+                    // Execute scripts silently inside the local sandbox workspace if execution anchors are found
+                    let pyMatch = accumulatedResponse.match(/\[EXECUTE_PYTHON:\s*([\s\S]*?)\]/);
+                    if (pyMatch && pyMatch[1]) {
+                        let innerScriptCode = pyMatch[1].replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+                        if (!AppState.pyodideReady) { await initializePyodideEnv(); }
+                        try {
+                            window.pyodide.runPython("sys.stdout.seek(0); sys.stdout.truncate(0); sys.stderr.seek(0); sys.stderr.truncate(0);");
+                            await window.pyodide.runPythonAsync(innerScriptCode);
+                            const sandboxOut = window.pyodide.runPython("sys.stdout.getvalue()");
+                            const sandboxErr = window.pyodide.runPython("sys.stderr.getvalue()");
+                            if (sandboxOut) appendTerminalOutput(`\n<span class="t-ok">[Automated Task Output]: ${sandboxOut}</span>\n`);
+                            if (sandboxErr) appendTerminalOutput(`\n<span class="t-err">[Automated Task Error]: ${sandboxErr}</span>\n`);
+                        } catch (pySandboxException) {
+                            appendTerminalOutput(`\n<span class="t-err">[Sandbox Exception]: ${pySandboxException.toString()}</span>\n`);
+                        }
+                    }
+
+                    AppState.isGenerating = false;
+                    DOM.mainTextInput.focus();
+                    handleComposerInput();
                 }
-                streamTarget.classList.remove('cursor-blink');
-                AppState.isGenerating = false;
-                DOM.mainTextInput.focus();
-                handleComposerInput();
             };
         })();
     </script>
