@@ -1,906 +1,1835 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Pratham AI</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
-<script src="https://cdn.jsdelivr.net/pyodide/v0.27.0/full/pyodide.js"></script>
-<style>
-html,body{margin:0;padding:0;width:100%;height:100%;}
-body{background:#f8f6f2;color:#191919;font-family:'Inter',-apple-system,sans-serif;overflow:hidden;display:flex;}
-:root{
-  --bg-main:#fbfaf7;--bg-sidebar:#f3f0e8;--bg-panel:#ffffff;
-  --border-color:#e2e0d8;--text-main:#191919;--text-secondary:#4a4a4a;
-  --text-dim:#85837d;--accent:#cc6239;--bubble-user:#f3f0e8;
-  --overlay:rgba(25,25,25,0.15);
-}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
-html,body{height:100dvh;}
-::-webkit-scrollbar{width:6px;height:6px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:#dedbd3;border-radius:3px;}
- 
-/* ── SIDEBAR ── */
-.sidebar{width:260px;flex-shrink:0;background:var(--bg-sidebar);border-right:1px solid var(--border-color);display:flex;flex-direction:column;padding:16px 12px;z-index:40;transition:transform .25s cubic-bezier(.4,0,.2,1);}
-.brand-header{display:flex;align-items:center;gap:10px;font-family:'Source Serif 4',serif;font-size:20px;font-weight:600;margin-bottom:20px;padding:4px 8px;}
-.brand-logo-img{width:28px;height:28px;object-fit:contain;border-radius:6px;}
-.new-chat-btn{display:flex;align-items:center;justify-content:space-between;background:transparent;border:1px solid var(--border-color);color:var(--text-main);padding:10px 16px;border-radius:99px;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:16px;width:100%;transition:background .2s;}
-.new-chat-btn:hover{background:rgba(0,0,0,.03);}
-.shortcut-badge{font-size:11px;color:var(--text-dim);background:rgba(0,0,0,.04);padding:2px 6px;border-radius:4px;border:1px solid var(--border-color);font-family:monospace;}
-.convo-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px;}
-.convo-label{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-dim);padding:14px 8px 6px;font-weight:700;}
-.convo-item{position:relative;padding:9px 12px;border-radius:8px;font-size:13.5px;color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background .2s;}
-.convo-item:hover{background:rgba(0,0,0,.03);color:var(--text-main);}
-.convo-item.active{background:var(--bg-panel);color:var(--text-main);font-weight:500;box-shadow:0 1px 3px rgba(0,0,0,.05);}
-.convo-title-text{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:22px;}
-.delete-convo-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:var(--text-dim);cursor:pointer;font-size:13px;display:none;padding:3px;border-radius:4px;}
-.convo-item:hover .delete-convo-btn{display:flex;align-items:center;}
-.delete-convo-btn:hover{color:#e55353;}
-.sidebar-footer{margin-top:auto;padding-top:12px;border-top:1px solid var(--border-color);position:relative;}
-.user-profile-btn{display:flex;align-items:center;gap:10px;width:100%;padding:8px;border-radius:12px;border:none;background:transparent;cursor:pointer;text-align:left;transition:background .2s;}
-.user-profile-btn:hover{background:rgba(0,0,0,.03);}
-.user-avatar{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;}
-.user-info{flex:1;min-width:0;}
-.user-name{font-size:13px;font-weight:500;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.plan-badge{font-size:11px;color:var(--text-dim);}
-.profile-menu{position:absolute;bottom:62px;left:0;right:0;background:var(--bg-panel);border:1px solid var(--border-color);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.08);display:none;flex-direction:column;z-index:100;overflow:hidden;}
-.profile-menu.open{display:flex;}
-.menu-item{padding:11px 14px;font-size:13.5px;color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;gap:10px;background:none;border:none;text-align:left;width:100%;transition:background .2s;}
-.menu-item:hover{background:rgba(0,0,0,.02);color:var(--text-main);}
-.menu-divider{height:1px;background:var(--border-color);margin:4px 0;}
- 
-/* ── MAIN ── */
-.main{flex:1;display:flex;flex-direction:column;min-width:0;height:100dvh;background:var(--bg-main);align-items:center;}
-.topbar{width:100%;flex-shrink:0;display:flex;align-items:center;padding:0 24px;min-height:54px;border-bottom:1px solid var(--border-color);}
-.menu-toggle-btn{background:none;border:none;font-size:20px;color:var(--text-secondary);cursor:pointer;display:none;margin-right:12px;}
-.topbar-title{font-size:14px;font-weight:500;color:var(--text-secondary);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.chat-scroll{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;width:100%;-webkit-overflow-scrolling:touch;}
-.chat-col{width:100%;max-width:780px;margin:auto;padding:24px 24px 0;display:flex;flex-direction:column;gap:0;flex:1;}
- 
-/* ── WELCOME ── */
-.welcome-state{margin:auto;text-align:center;width:100%;padding:48px 0;display:flex;flex-direction:column;align-items:center;}
-.welcome-title{font-family:'Source Serif 4',serif;font-size:34px;font-weight:400;margin-bottom:32px;letter-spacing:-.01em;}
-.suggestion-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;width:100%;}
-.suggestion-card{background:var(--bg-panel);border:1px solid var(--border-color);border-radius:12px;padding:16px;text-align:left;cursor:pointer;transition:background .2s,transform .1s;display:flex;flex-direction:column;gap:6px;min-height:100px;}
-.suggestion-card:hover{background:var(--bg-main);border-color:var(--text-dim);transform:translateY(-1px);}
-.suggestion-icon{font-size:16px;color:var(--accent);}
-.suggestion-text{font-size:13.5px;font-weight:500;color:var(--text-main);}
-.suggestion-sub{font-size:12px;color:var(--text-dim);line-height:1.4;}
- 
-/* ── MESSAGES ── */
-.msg-container{display:flex;flex-direction:column;width:100%;padding:20px 0;animation:fadeIn .2s ease;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
-.msg-sender-label{font-size:11px;font-weight:600;color:var(--text-main);margin-bottom:8px;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.06em;}
-.msg-sender-label.user{justify-content:flex-end;color:var(--text-dim);}
-.msg-row{display:flex;width:100%;}
-.msg-row.user{justify-content:flex-end;}
-.msg{width:100%;font-family:'Source Serif 4',Georgia,serif;font-size:16px;line-height:1.72;color:var(--text-main);word-wrap:break-word;}
-.msg-row.user .msg{max-width:80%;font-family:'Inter',sans-serif;font-size:14.5px;background:var(--bubble-user);padding:11px 16px;border-radius:18px;line-height:1.55;box-shadow:0 2px 8px rgba(0,0,0,.04);}
-.msg h1,.msg h2,.msg h3{font-family:'Source Serif 4',serif;margin:1.1em 0 .45em;font-weight:600;line-height:1.3;}
-.msg p{margin-bottom:.75em;}.msg p:last-child{margin-bottom:0;}
-.msg ul,.msg ol{margin-bottom:.75em;padding-left:22px;}.msg li{margin-bottom:.25em;}
-.msg table{display:block;border-collapse:collapse;width:100%;margin:1.2em 0;font-size:13.5px;overflow-x:auto;font-family:'Inter',sans-serif;}
-.msg th,.msg td{border:1px solid var(--border-color);padding:9px 13px;text-align:left;}
-.msg th{background:#f3f0e8;font-weight:600;}
-.msg code{background:rgba(0,0,0,.04);padding:2px 5px;border-radius:4px;font-family:monospace;font-size:13px;color:#b84a25;}
-.msg pre{background:#f8f6f0;border:1px solid var(--border-color);padding:14px;border-radius:8px;overflow-x:auto;margin:1.2em 0;font-family:monospace;}
-.msg pre code{background:transparent;padding:0;color:#24292e;font-size:13px;}
-.streaming-cursor::after{content:"▋";animation:blink .8s step-end infinite;color:var(--accent);margin-left:2px;}
-@keyframes blink{50%{opacity:0}}
- 
-/* ── TOOL-USE BLOCKS (Claude-style) ── */
-.tool-block{margin:.6em 0;border:1px solid var(--border-color);border-radius:10px;overflow:hidden;font-family:'Inter',sans-serif;}
-.tool-header{display:flex;align-items:center;gap:8px;padding:9px 14px;background:var(--bg-sidebar);cursor:pointer;user-select:none;font-size:13px;font-weight:500;color:var(--text-secondary);}
-.tool-header:hover{background:#eae7df;}
-.tool-status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.tool-status-dot.running{background:#f59e0b;animation:pulse 1s infinite;}
-.tool-status-dot.done{background:#10b981;}
-.tool-status-dot.error{background:#ef4444;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.tool-chevron{margin-left:auto;transition:transform .2s;font-size:11px;color:var(--text-dim);}
-.tool-chevron.open{transform:rotate(180deg);}
-.tool-body{display:none;padding:12px 14px;font-size:12.5px;font-family:monospace;background:#fdfcf9;color:var(--text-secondary);white-space:pre-wrap;max-height:300px;overflow-y:auto;border-top:1px solid var(--border-color);}
-.tool-body.open{display:block;}
-.tool-label{font-size:11px;color:var(--text-dim);font-family:monospace;}
- 
-/* ── CODE BUTTONS ── */
-.code-btn-row{display:flex;gap:6px;margin:4px 0 12px;flex-wrap:wrap;}
-.code-btn{display:inline-flex;align-items:center;gap:5px;background:var(--bg-sidebar);border:1px solid var(--border-color);border-radius:7px;padding:5px 11px;font-size:12px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:background .2s;}
-.code-btn:hover{background:#e8e5dc;color:var(--text-main);}
- 
-/* ── GENERATED IMAGE ── */
-.gen-img-loading{color:var(--text-dim);font-size:13px;font-style:italic;margin-top:10px;font-family:'Inter',sans-serif;}
-.gen-img-result{max-width:100%;border-radius:12px;margin-top:12px;box-shadow:0 4px 16px rgba(0,0,0,.08);display:block;cursor:pointer;}
-.gen-img-result:hover{opacity:.95;}
- 
-/* ── LONG TEXT DOWNLOAD ── */
-.long-dl-link{display:flex;align-items:center;gap:8px;background:var(--bg-sidebar);border:1px solid var(--border-color);border-radius:10px;padding:11px 16px;margin-top:14px;font-size:13px;color:var(--text-secondary);text-decoration:none;max-width:400px;font-family:'Inter',sans-serif;}
-.long-dl-link:hover{background:#e8e5dc;}
-.long-dl-link u{color:var(--accent);}
- 
-/* ── THINKING STATE ── */
-.thinking-state{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--text-dim);font-family:'Inter',sans-serif;padding:4px 0;}
-.dot-flashing{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:df 1s infinite linear alternate;position:relative;}
-.dot-flashing::before,.dot-flashing::after{content:'';position:absolute;top:0;width:6px;height:6px;border-radius:50%;background:var(--accent);animation:df 1s infinite alternate;}
-.dot-flashing::before{left:-12px;animation-delay:0s;}.dot-flashing::after{left:12px;animation-delay:.8s;}
-@keyframes df{0%{background:var(--accent)}50%,100%{background:rgba(204,98,57,.15)}}
-.loading-video-el{max-width:200px;border-radius:12px;display:block;}
- 
-/* ── ATTACHMENT CHIP ── */
-.chip-bar{display:none;padding-bottom:10px;flex-wrap:wrap;gap:6px;}
-.file-chip{display:inline-flex;align-items:center;gap:6px;background:var(--bg-sidebar);border:1px solid var(--border-color);padding:5px 11px;border-radius:16px;font-size:12.5px;color:var(--text-secondary);font-family:'Inter',sans-serif;}
-.file-chip img{width:32px;height:32px;object-fit:cover;border-radius:5px;}
-.chip-remove{background:none;border:none;cursor:pointer;color:var(--text-dim);font-size:13px;border-radius:50%;padding:2px 4px;}
-.chip-remove:hover{color:#e55353;}
- 
-/* ── COMPOSER ── */
-.composer-wrap{flex-shrink:0;display:flex;flex-direction:column;align-items:center;width:100%;padding:0 24px 24px;background:linear-gradient(180deg,transparent 0%,var(--bg-main) 30%);z-index:30;}
-.composer-box{width:100%;max-width:780px;border:1px solid var(--border-color);border-radius:16px;padding:14px 18px;position:relative;transition:border-color .2s,box-shadow .2s;background:rgba(255,255,255,.88);backdrop-filter:blur(16px);box-shadow:0 2px 12px rgba(0,0,0,.03);}
-.composer-box:focus-within{border-color:var(--text-dim);box-shadow:0 4px 20px rgba(0,0,0,.06);}
-.composer-box textarea{width:100%;border:none;outline:none;resize:none;font-family:'Inter',sans-serif;font-size:15px;line-height:1.5;max-height:200px;background:transparent;color:var(--text-main);padding-bottom:40px;}
-.composer-box textarea::placeholder{color:var(--text-dim);}
-.composer-bar{position:absolute;bottom:10px;left:18px;right:18px;display:flex;align-items:center;justify-content:space-between;pointer-events:none;}
-.composer-left{display:flex;align-items:center;gap:6px;pointer-events:auto;}
-.composer-right{display:flex;align-items:center;gap:8px;pointer-events:auto;}
-.pill-btn{background:var(--bg-sidebar);border:1px solid transparent;border-radius:20px;color:var(--text-secondary);font-size:12.5px;font-weight:500;padding:5px 13px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background .2s;font-family:'Inter',sans-serif;}
-.pill-btn:hover{background:#e8e5dc;color:var(--text-main);}
-.send-btn{background:var(--text-main);border:none;color:var(--bg-main);width:30px;height:30px;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,transform .1s;}
-.send-btn:disabled{background:var(--border-color);color:var(--text-dim);cursor:not-allowed;}
-.send-btn:not(:disabled):hover{background:var(--accent);color:#fff;transform:scale(1.05);}
- 
-/* ── PREVIEW PANEL (right side, Claude-style) ── */
-.preview-panel{position:fixed;top:0;right:-720px;width:720px;max-width:92vw;height:100dvh;background:var(--bg-panel);border-left:1px solid var(--border-color);box-shadow:-6px 0 28px rgba(0,0,0,.05);z-index:200;display:flex;flex-direction:column;transition:right .3s cubic-bezier(.4,0,.2,1);}
-.preview-panel.open{right:0;}
-.preview-topbar{display:flex;justify-content:space-between;align-items:center;padding:13px 18px;border-bottom:1px solid var(--border-color);font-size:13.5px;font-weight:500;flex-shrink:0;gap:8px;font-family:'Inter',sans-serif;}
-.preview-topbar-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-main);}
-.preview-topbar-actions{display:flex;gap:6px;}
-.preview-act-btn{background:none;border:1px solid var(--border-color);border-radius:6px;padding:4px 10px;font-size:12.5px;cursor:pointer;color:var(--text-secondary);font-family:'Inter',sans-serif;}
-.preview-act-btn:hover{background:var(--bg-sidebar);}
-.preview-tabs{display:flex;border-bottom:1px solid var(--border-color);flex-shrink:0;}
-.preview-tab{padding:9px 18px;font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;color:var(--text-dim);border-bottom:2px solid transparent;transition:color .2s;}
-.preview-tab.active{color:var(--text-main);border-bottom-color:var(--text-main);font-weight:500;}
-.preview-body{flex:1;overflow:hidden;position:relative;}
-.preview-body iframe{width:100%;height:100%;border:none;}
-.preview-body pre{padding:20px;overflow:auto;height:100%;font-size:12.5px;background:#f8f6f0;margin:0;font-family:monospace;line-height:1.6;}
-.preview-body .preview-img-wrap{display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:20px;}
-.preview-body .preview-img-wrap img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;}
-.preview-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.08);z-index:199;display:none;}
-.preview-backdrop.active{display:block;}
- 
-/* ── TERMINAL (bottom, Claude Code-style) ── */
-.terminal-wrap{position:fixed;bottom:0;left:260px;right:0;height:0;background:#1c1c1e;border-top:2px solid #333;z-index:150;display:flex;flex-direction:column;transition:height .25s cubic-bezier(.4,0,.2,1);overflow:hidden;}
-.terminal-wrap.open{height:320px;}
-.terminal-topbar{display:flex;justify-content:space-between;align-items:center;padding:8px 16px;background:#111;color:#aaa;font-size:13px;border-bottom:1px solid #2a2a2a;flex-shrink:0;font-family:monospace;}
-.terminal-topbar-left{display:flex;align-items:center;gap:8px;}
-.terminal-dot{width:12px;height:12px;border-radius:50%;}
-.terminal-output{flex:1;overflow-y:auto;padding:10px 16px;font-size:12.5px;font-family:'Courier New',monospace;line-height:1.6;white-space:pre-wrap;}
-.t-out{color:#e0e0e0;}.t-err{color:#ff6b6b;}.t-ok{color:#50fa7b;}.t-cmd{color:#8be9fd;}
-.terminal-input-row{display:flex;align-items:center;padding:8px 16px;border-top:1px solid #2a2a2a;flex-shrink:0;}
-.terminal-prompt{color:#50fa7b;margin-right:8px;font-size:13px;font-family:monospace;}
-.terminal-input{flex:1;background:transparent;border:none;outline:none;color:#f8f8f2;font-family:'Courier New',monospace;font-size:13px;}
-.terminal-run-btn{background:#2d6a4f;border:none;color:#fff;padding:4px 12px;border-radius:5px;cursor:pointer;font-size:12px;font-family:monospace;}
- 
-/* ── MODALS ── */
-.modal-overlay{position:fixed;inset:0;background:var(--overlay);z-index:300;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px);}
-.modal-overlay.open{display:flex;}
-.modal-frame{background:var(--bg-panel);border:1px solid var(--border-color);width:100%;max-width:520px;border-radius:14px;box-shadow:0 16px 36px rgba(0,0,0,.08);display:flex;flex-direction:column;overflow:hidden;animation:mpop .15s ease-out;}
-@keyframes mpop{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:scale(1)}}
-.modal-top{padding:16px 22px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;}
-.modal-top h3{font-size:16px;font-weight:600;}
-.modal-dismiss{background:none;border:none;font-size:20px;color:var(--text-dim);cursor:pointer;}
-.modal-body{padding:22px;display:flex;flex-direction:column;gap:18px;}
-.setting-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;}
-.setting-info label{font-size:14px;font-weight:500;display:block;margin-bottom:2px;}
-.setting-sub{font-size:12px;color:var(--text-dim);}
-.danger-btn{background:#c94a4a;border:none;color:#fff;padding:9px 16px;border-radius:8px;font-size:13.5px;font-weight:500;cursor:pointer;text-align:center;width:100%;}
-.danger-btn:hover{background:#b03f3f;}
-.backdrop-shield{position:fixed;inset:0;background:var(--overlay);z-index:35;display:none;opacity:0;transition:opacity .2s;}
-.backdrop-shield.active{display:block;opacity:1;}
- 
-/* ── RESPONSIVE ── */
-@media(max-width:1024px){
-  .sidebar{position:fixed;inset:0 auto 0 0;transform:translateX(-100%);box-shadow:none;}
-  .sidebar.open{transform:translateX(0);box-shadow:8px 0 24px rgba(0,0,0,.04);}
-  .menu-toggle-btn{display:block;}
-  .composer-wrap{padding:0 16px 20px;}
-  .chat-col{padding:16px 16px 0;}
-  .terminal-wrap{left:0;}
-}
-@media(max-width:720px){
-  .sidebar{width:270px;}
-  .topbar{padding:0 14px;min-height:48px;}
-  .preview-panel{width:100vw;right:-100vw;}
-  .msg-row.user .msg{max-width:90%;}
-  .msg{font-size:15.5px;}
-  .welcome-title{font-size:26px;}
-}
-</style>
-<link rel="icon" type="image/png" href="/icon-192.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+    <meta name="description" content="Pratham AI - Advanced Interface with Python Execution and RAG Capabilities">
+    <title>Pratham AI - Enterprise Interface</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.27.0/full/pyodide.js"></script>
+
+    <style>
+        /* ==========================================================================
+           1. CSS VARIABLES & THEME DEFINITIONS
+           ========================================================================== */
+        :root {
+            /* Light Theme (Default) */
+            --bg-main: #fbfaf7;
+            --bg-sidebar: #f3f0e8;
+            --bg-panel: #ffffff;
+            --bg-hover: rgba(0, 0, 0, 0.04);
+            --bg-active: rgba(0, 0, 0, 0.08);
+            
+            --border-light: #e2e0d8;
+            --border-heavy: #d1cfc7;
+            
+            --text-primary: #191919;
+            --text-secondary: #4a4a4a;
+            --text-tertiary: #85837d;
+            --text-inverse: #ffffff;
+            
+            --accent-primary: #cc6239;
+            --accent-hover: #b35531;
+            --accent-vip: #d4af37;
+            --accent-vip-glow: rgba(212, 175, 55, 0.4);
+            
+            --status-success: #2e7d32;
+            --status-error: #d32f2f;
+            --status-warning: #ed6c02;
+            --status-info: #0288d1;
+            
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.12);
+            --shadow-lg: 0 16px 36px rgba(0,0,0,0.15);
+            --overlay-bg: rgba(25, 25, 25, 0.4);
+            
+            /* Typography */
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-serif: 'Source Serif 4', Georgia, Cambria, "Times New Roman", Times, serif;
+            --font-mono: 'Fira Code', Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+            
+            /* Spacing & Geometry */
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-pill: 9999px;
+            --sidebar-width: 280px;
+            --topbar-height: 60px;
+            
+            /* Terminal Specific */
+            --term-bg: #1e1e1e;
+            --term-header: #252526;
+            --term-text: #cccccc;
+            --term-border: #333333;
+            --term-cmd: #569cd6;
+            --term-err: #f44747;
+            --term-ok: #b5cea8;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-main: #121212;
+                --bg-sidebar: #1a1a1a;
+                --bg-panel: #242424;
+                --bg-hover: rgba(255, 255, 255, 0.08);
+                --bg-active: rgba(255, 255, 255, 0.12);
+                
+                --border-light: #333333;
+                --border-heavy: #444444;
+                
+                --text-primary: #e0e0e0;
+                --text-secondary: #a0a0a0;
+                --text-tertiary: #707070;
+                --text-inverse: #121212;
+                
+                --accent-primary: #e87b51;
+                --accent-hover: #ff8f66;
+                
+                --overlay-bg: rgba(0, 0, 0, 0.7);
+            }
+        }
+
+        /* ==========================================================================
+           2. GLOBAL RESET & BASE STYLES
+           ========================================================================== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            height: 100dvh;
+            width: 100vw;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 16px;
+            line-height: 1.5;
+            overflow: hidden;
+            display: flex;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-heavy);
+            border-radius: var(--radius-pill);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: var(--text-tertiary);
+        }
+
+        /* Typography Defaults */
+        h1, h2, h3, h4, h5, h6 { font-family: var(--font-serif); font-weight: 600; line-height: 1.2; }
+        button, input, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+        button { cursor: pointer; border: none; background: none; }
+        a { color: var(--accent-primary); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* ==========================================================================
+           3. LAYOUT: SIDEBAR
+           ========================================================================== */
+        .app-sidebar {
+            width: var(--sidebar-width);
+            flex-shrink: 0;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 16px;
+            z-index: 40;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+        }
+
+        .brand-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--font-serif);
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            padding: 0 4px;
+        }
+
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            background-color: var(--accent-primary);
+            color: var(--text-inverse);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 2px 8px rgba(204, 98, 57, 0.3);
+        }
+
+        .btn-new-chat {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: transparent;
+            border: 1px solid var(--border-heavy);
+            color: var(--text-primary);
+            padding: 12px 16px;
+            border-radius: var(--radius-pill);
+            font-size: 14px;
+            font-weight: 500;
+            width: 100%;
+            transition: all 0.2s ease;
+            margin-bottom: 20px;
+        }
+
+        .btn-new-chat:hover, .btn-new-chat:focus-visible {
+            background-color: var(--bg-hover);
+            border-color: var(--text-tertiary);
+            outline: none;
+        }
+
+        .shortcut-badge {
+            font-size: 11px;
+            color: var(--text-secondary);
+            background-color: var(--bg-active);
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-mono);
+            letter-spacing: 0.5px;
+        }
+
+        /* Conversation List */
+        .convo-list-container {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding-right: 4px;
+        }
+
+        .convo-group-label {
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+            padding: 16px 8px 8px;
+            font-weight: 700;
+        }
+
+        .convo-item {
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .convo-item:hover {
+            background-color: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .convo-item.active {
+            background-color: var(--bg-panel);
+            color: var(--text-primary);
+            font-weight: 500;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .convo-title {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .convo-icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            opacity: 0.7;
+        }
+
+        /* Sidebar Footer (Profile) */
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-light);
+            position: relative;
+        }
+
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 10px;
+            border-radius: var(--radius-md);
+            transition: background-color 0.2s;
+            text-align: left;
+        }
+
+        .profile-trigger:hover, .profile-trigger:focus-visible {
+            background-color: var(--bg-hover);
+            outline: none;
+        }
+
+        .avatar-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--accent-primary);
+            color: var(--text-inverse);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+            position: relative;
+        }
+
+        .avatar-circle.is-vip {
+            background-color: var(--accent-vip);
+            box-shadow: 0 0 12px var(--accent-vip-glow);
+            border: 2px solid var(--bg-sidebar);
+        }
+
+        .profile-details {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile-name {
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .vip-indicator {
+            font-size: 10px;
+            color: var(--accent-vip);
+            background: var(--bg-active);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: none;
+        }
+
+        .profile-status {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        /* Profile Dropdown Menu */
+        .dropdown-menu {
+            position: absolute;
+            bottom: 70px;
+            left: 0;
+            right: 0;
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+            padding: 8px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 100;
+        }
+
+        .dropdown-menu.is-open {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .menu-action {
+            padding: 10px 12px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            text-align: left;
+            transition: all 0.15s;
+        }
+
+        .menu-action:hover, .menu-action:focus-visible {
+            background-color: var(--bg-hover);
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .menu-action svg { width: 18px; height: 18px; fill: currentColor; }
+        .menu-action.danger { color: var(--status-error); }
+        .menu-action.danger:hover { background-color: rgba(211, 47, 47, 0.1); }
+        .menu-divider { height: 1px; background-color: var(--border-light); margin: 6px 0; }
+
+        /* ==========================================================================
+           4. LAYOUT: MAIN WORKSPACE
+           ========================================================================== */
+        .app-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            height: 100%;
+            background-color: var(--bg-main);
+            position: relative;
+        }
+
+        /* Topbar */
+        .app-topbar {
+            width: 100%;
+            height: var(--topbar-height);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            border-bottom: 1px solid var(--border-light);
+            background-color: rgba(251, 250, 247, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            position: absolute;
+            top: 0;
+            z-index: 20;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .app-topbar { background-color: rgba(18, 18, 18, 0.8); }
+        }
+
+        .topbar-left { display: flex; align-items: center; gap: 16px; }
+        
+        .mobile-menu-btn {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+        .mobile-menu-btn svg { width: 24px; height: 24px; fill: currentColor; }
+
+        .chat-header-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            opacity: 0.9;
+        }
+
+        .topbar-tools { display: flex; align-items: center; gap: 12px; }
+
+        .tool-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--bg-sidebar);
+            border: 1px solid var(--border-heavy);
+            padding: 6px 16px;
+            border-radius: var(--radius-pill);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .tool-toggle svg { width: 16px; height: 16px; fill: currentColor; }
+
+        .tool-toggle:hover { background-color: var(--bg-hover); color: var(--text-primary); }
+        .tool-toggle.is-active {
+            background-color: var(--text-primary);
+            color: var(--text-inverse);
+            border-color: var(--text-primary);
+        }
+
+        /* ==========================================================================
+           5. CHAT FEED & MESSAGES
+           ========================================================================== */
+        .chat-viewport {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding-top: calc(var(--topbar-height) + 24px);
+            padding-bottom: 24px;
+            scroll-behavior: smooth;
+        }
+
+        .chat-content-max {
+            width: 100%;
+            max-width: 840px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            padding: 0 24px;
+        }
+
+        /* Welcome / Zero State */
+        .hero-welcome {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 60px 0 40px;
+            animation: fadeUp 0.6s ease-out;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-title {
+            font-size: 40px;
+            font-family: var(--font-serif);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            max-width: 500px;
+        }
+
+        .prompt-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            width: 100%;
+        }
+
+        .prompt-card {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            text-align: left;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .prompt-card:hover {
+            border-color: var(--border-heavy);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .prompt-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background-color: var(--bg-sidebar);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 4px;
+        }
+        .prompt-icon svg { width: 18px; height: 18px; fill: var(--text-secondary); }
+        .prompt-card:hover .prompt-icon svg { fill: var(--accent-primary); }
+
+        .prompt-headline { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+        .prompt-desc { font-size: 13px; color: var(--text-tertiary); line-height: 1.4; }
+
+        /* Message Structure */
+        .message-group {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            animation: fadeUp 0.3s ease-out;
+        }
+
+        .message-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .meta-user { justify-content: flex-end; color: var(--text-tertiary); }
+        .meta-ai { justify-content: flex-start; color: var(--text-primary); }
+        
+        .ai-badge-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            background: var(--text-primary);
+            color: var(--bg-main);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .ai-badge-icon svg { width: 10px; height: 10px; fill: currentColor; }
+
+        .message-body-wrapper {
+            display: flex;
+            width: 100%;
+        }
+
+        .wrapper-user { justify-content: flex-end; }
+        .wrapper-ai { justify-content: flex-start; }
+
+        /* Content Styling */
+        .message-content {
+            font-family: var(--font-serif);
+            font-size: 17px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            width: 100%;
+            word-wrap: break-word;
+        }
+
+        .wrapper-user .message-content {
+            max-width: 85%;
+            font-family: var(--font-sans);
+            font-size: 15px;
+            background-color: var(--bg-sidebar);
+            padding: 16px 20px;
+            border-radius: var(--radius-lg);
+            border-bottom-right-radius: 4px;
+            line-height: 1.5;
+        }
+
+        /* Markdown Elements within Message */
+        .message-content p { margin-bottom: 1.2em; }
+        .message-content p:last-child { margin-bottom: 0; }
+        .message-content h1, .message-content h2, .message-content h3 {
+            font-family: var(--font-sans);
+            font-weight: 700;
+            margin: 1.5em 0 0.5em;
+            color: var(--text-primary);
+        }
+        .message-content ul, .message-content ol {
+            margin-bottom: 1.2em;
+            padding-left: 24px;
+        }
+        .message-content li { margin-bottom: 0.5em; }
+        
+        /* Code Blocks */
+        .message-content pre {
+            background-color: var(--term-bg);
+            border: 1px solid var(--term-border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            overflow-x: auto;
+            margin: 1.5em 0;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .message-content code {
+            font-family: var(--font-mono);
+            background-color: rgba(128, 128, 128, 0.15);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--accent-primary);
+        }
+        .message-content pre code { background: transparent; padding: 0; color: inherit; }
+
+        /* Tables */
+        .message-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5em 0;
+            font-family: var(--font-sans);
+            font-size: 14px;
+        }
+        .message-content th, .message-content td {
+            border: 1px solid var(--border-heavy);
+            padding: 10px 14px;
+            text-align: left;
+        }
+        .message-content th {
+            background-color: var(--bg-sidebar);
+            font-weight: 600;
+        }
+
+        /* Streaming Indicator */
+        .cursor-blink::after {
+            content: "▋";
+            display: inline-block;
+            vertical-align: text-bottom;
+            animation: blink 1s step-end infinite;
+            color: var(--accent-primary);
+            margin-left: 4px;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* Process Status Blocks */
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--bg-sidebar);
+            border: 1px solid var(--border-heavy);
+            padding: 8px 16px;
+            border-radius: var(--radius-pill);
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin: 10px 0;
+        }
+        .spinner {
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--border-heavy);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ==========================================================================
+           6. COMPOSER (Input Area)
+           ========================================================================== */
+        .input-dock {
+            width: 100%;
+            padding: 0 24px 32px;
+            display: flex;
+            justify-content: center;
+            background: linear-gradient(180deg, transparent 0%, var(--bg-main) 15%, var(--bg-main) 100%);
+            flex-shrink: 0;
+            position: relative;
+            z-index: 30;
+        }
+
+        .input-card {
+            width: 100%;
+            max-width: 840px;
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border-heavy);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .input-card:focus-within {
+            border-color: var(--text-secondary);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Attachments Area */
+        .attachment-rack {
+            display: none;
+            padding: 12px 16px 0;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .attachment-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--bg-sidebar);
+            border: 1px solid var(--border-light);
+            padding: 6px 12px;
+            border-radius: var(--radius-pill);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .attachment-chip svg { width: 14px; height: 14px; fill: currentColor; }
+        .btn-remove-chip {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: rgba(0,0,0,0.05);
+            color: var(--text-tertiary);
+            transition: all 0.2s;
+        }
+        .btn-remove-chip:hover { background-color: var(--status-error); color: white; }
+
+        /* Textarea */
+        .textarea-wrapper {
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+        }
+        .main-textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            resize: none;
+            font-family: var(--font-sans);
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--text-primary);
+            max-height: 250px;
+            min-height: 24px;
+        }
+        .main-textarea::placeholder { color: var(--text-tertiary); }
+
+        /* Composer Controls (Bottom Row) */
+        .composer-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+        }
+        .toolbar-left, .toolbar-right { display: flex; align-items: center; gap: 8px; }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            background-color: transparent;
+            transition: all 0.2s;
+        }
+        .btn-icon:hover { background-color: var(--bg-hover); color: var(--text-primary); }
+        .btn-icon svg { width: 20px; height: 20px; fill: currentColor; }
+
+        .btn-send {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--text-primary);
+            color: var(--bg-panel);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-send svg { width: 16px; height: 16px; fill: currentColor; }
+        .btn-send:disabled {
+            background-color: var(--border-heavy);
+            color: var(--text-tertiary);
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-send:not(:disabled):hover {
+            transform: scale(1.08);
+            background-color: var(--accent-primary);
+        }
+
+        .disclaimer-text {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-top: 12px;
+            width: 100%;
+        }
+
+        /* ==========================================================================
+           7. TERMINAL PANEL (Python Sandbox)
+           ========================================================================== */
+        .terminal-drawer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 0;
+            background-color: var(--term-bg);
+            border-top: 1px solid var(--term-border);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: height 0.35s cubic-bezier(0.19, 1, 0.22, 1);
+            overflow: hidden;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.3);
+        }
+
+        .terminal-drawer.is-open { height: 350px; }
+
+        .term-header-bar {
+            background-color: var(--term-header);
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--term-border);
+            flex-shrink: 0;
+        }
+        
+        .term-title {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: #888888;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .mac-dots { display: flex; gap: 6px; }
+        .mac-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .md-red { background: #ff5f56; } .md-yel { background: #ffbd2e; } .md-grn { background: #27c93f; }
+
+        .term-actions { display: flex; gap: 8px; }
+        .btn-term-action {
+            background-color: transparent;
+            border: 1px solid #444;
+            color: #ccc;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-family: var(--font-sans);
+            font-size: 11px;
+            transition: all 0.2s;
+        }
+        .btn-term-action:hover { background-color: #333; color: white; }
+
+        .term-output-area {
+            flex: 1;
+            padding: 12px 16px;
+            overflow-y: auto;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--term-text);
+            white-space: pre-wrap;
+        }
+        
+        /* Terminal Syntax Colors */
+        .t-sys { color: #888888; font-style: italic; }
+        .t-cmd { color: var(--term-cmd); }
+        .t-ok  { color: var(--term-ok); }
+        .t-err { color: var(--term-err); }
+
+        .term-input-row {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            border-top: 1px solid var(--term-border);
+            background-color: #1a1a1a;
+            flex-shrink: 0;
+        }
+        .term-prompt-symbol {
+            color: #4ec9b0;
+            font-family: var(--font-mono);
+            margin-right: 12px;
+            font-weight: 600;
+        }
+        .term-input-field {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: white;
+            font-family: var(--font-mono);
+            font-size: 14px;
+        }
+
+        /* ==========================================================================
+           8. MODALS & OVERLAYS
+           ========================================================================== */
+        .overlay-backdrop {
+            position: fixed;
+            inset: 0;
+            background-color: var(--overlay-bg);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .overlay-backdrop.is-visible { opacity: 1; pointer-events: auto; }
+
+        .modal-card {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border-heavy);
+            width: 90%;
+            max-width: 440px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            transform: scale(0.95) translateY(10px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .overlay-backdrop.is-visible .modal-card {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-title { font-size: 18px; font-family: var(--font-serif); font-weight: 600; }
+        .btn-close-modal {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-tertiary);
+            transition: background 0.2s;
+        }
+        .btn-close-modal:hover { background-color: var(--bg-hover); color: var(--text-primary); }
+        .btn-close-modal svg { width: 16px; height: 16px; fill: currentColor; }
+
+        .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+        .modal-text { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-label { font-size: 12px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; }
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-heavy);
+            border-radius: var(--radius-sm);
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-size: 15px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-input:focus { border-color: var(--accent-primary); box-shadow: 0 0 0 3px rgba(204, 98, 57, 0.15); outline: none; }
+
+        .btn-primary {
+            background-color: var(--text-primary);
+            color: var(--bg-panel);
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-primary:hover { background-color: var(--accent-primary); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+        
+        /* Form error states */
+        .form-error-msg { font-size: 12px; color: var(--status-error); display: none; margin-top: 4px; }
+        .has-error .form-input { border-color: var(--status-error); }
+        .has-error .form-error-msg { display: block; }
+
+        /* ==========================================================================
+           9. RESPONSIVE DESIGN (Media Queries)
+           ========================================================================== */
+        @media (max-width: 900px) {
+            .app-sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                transform: translateX(-100%);
+                box-shadow: var(--shadow-lg);
+            }
+            .app-sidebar.is-open { transform: translateX(0); }
+            
+            .mobile-menu-btn { display: flex; }
+            .chat-content-max { padding: 0 16px; }
+            .input-dock { padding: 0 16px 20px; }
+        }
+
+        @media (max-width: 600px) {
+            .hero-title { font-size: 32px; }
+            .topbar-tools .tool-toggle span { display: none; } /* Hide text on small screens */
+            .wrapper-user .message-content { max-width: 95%; }
+            .terminal-drawer.is-open { height: 50vh; }
+        }
+    </style>
 </head>
 <body>
- 
-<div class="backdrop-shield" id="sidebarBackdrop"></div>
- 
-<div class="sidebar" id="sidebar">
-  <div class="brand-header">
-    <img src="assets/logo.png" alt="P" class="brand-logo-img" onerror="this.style.display='none'">
-    <span>Pratham AI</span>
-  </div>
-  <button class="new-chat-btn" id="newChatBtn">
-    <span>New chat</span><span class="shortcut-badge">⌘K</span>
-  </button>
-  <div class="convo-list" id="convoList"></div>
-  <div class="sidebar-footer">
-    <div id="googleSignInContainer" style="display:none;padding:8px 0;"></div>
-    <button class="user-profile-btn" id="profileToggleBtn" style="display:none;">
-      <div class="user-avatar" id="userAvatarText">P</div>
-      <div class="user-info">
-        <div id="profileName" class="user-name">Guest</div>
-        <div class="plan-badge">Free Plan</div>
-      </div>
-      <span style="font-size:11px;color:var(--text-dim);">▲</span>
-    </button>
-    <div class="profile-menu" id="profileMenu">
-      <button class="menu-item" id="menuSettingsBtn">⚙️ Settings</button>
-      <div class="menu-divider"></div>
-      <button class="menu-item" id="menuLogoutBtn" style="color:var(--accent);">🚪 Log out</button>
-    </div>
-  </div>
-</div>
- 
-<div class="main">
-  <div class="topbar">
-    <button class="menu-toggle-btn" id="menuBtn">☰</button>
-    <span class="topbar-title" id="topbarTitle"></span>
-    <button class="pill-btn" id="terminalToggleBtn" style="pointer-events:auto;margin-left:auto;">⬛ Terminal</button>
-  </div>
-  <div class="chat-scroll" id="chatScroll">
-    <div class="chat-col" id="chatCol"></div>
-  </div>
-  <div class="composer-wrap">
-    <div class="composer-box">
-      <div class="chip-bar" id="chipBar"></div>
-      <textarea id="msgInput" rows="1" placeholder="How can Pratham AI help you today?" autocomplete="off"></textarea>
-      <div class="composer-bar">
-        <div class="composer-left">
-          <button class="pill-btn" id="attachBtn">📎 Attach</button>
-          <input type="file" id="fileInput" accept="*/*" style="display:none;">
-          <button class="pill-btn" style="pointer-events:none;">
-            <span style="color:var(--accent);">●</span> Pratham AI
-          </button>
+
+    <aside class="app-sidebar" id="mainSidebar" aria-label="Main Navigation">
+        <div class="brand-header">
+            <div class="brand-logo">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <span>Pratham AI</span>
         </div>
-        <div class="composer-right">
-          <button class="send-btn" id="sendBtn" disabled>↑</button>
+        
+        <button class="btn-new-chat" id="btnNewChat" aria-label="Start new conversation">
+            <span>New Chat</span>
+            <span class="shortcut-badge">⌘K</span>
+        </button>
+        
+        <div class="convo-list-container">
+            <div class="convo-group-label">Github Synced History</div>
+            <div id="conversationList">
+                </div>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
- 
-<!-- Preview Panel -->
-<div class="preview-panel" id="previewPanel">
-  <div class="preview-topbar">
-    <span class="preview-topbar-title" id="previewTitle">Preview</span>
-    <div class="preview-topbar-actions">
-      <button class="preview-act-btn" id="previewNewTabBtn">↗ Open</button>
-      <button class="preview-act-btn" id="previewDlBtn">⬇ Download</button>
-      <button class="preview-act-btn" id="previewCloseBtn">✕</button>
-    </div>
-  </div>
-  <div class="preview-tabs" id="previewTabs"></div>
-  <div class="preview-body" id="previewBody"></div>
-</div>
-<div class="preview-backdrop" id="previewBackdrop"></div>
- 
-<!-- Terminal -->
-<div class="terminal-wrap" id="terminalWrap">
-  <div class="terminal-topbar">
-    <div class="terminal-topbar-left">
-      <div class="terminal-dot" style="background:#ff5f56;"></div>
-      <div class="terminal-dot" style="background:#ffbd2e;"></div>
-      <div class="terminal-dot" style="background:#27c93f;"></div>
-      <span style="margin-left:8px;">Python Terminal</span>
-    </div>
-    <div style="display:flex;gap:6px;">
-      <button class="preview-act-btn" id="clearTermBtn" style="color:#aaa;border-color:#444;">Clear</button>
-      <button class="preview-act-btn" id="closeTermBtn" style="color:#aaa;border-color:#444;">✕</button>
-    </div>
-  </div>
-  <div class="terminal-output" id="termOutput"></div>
-  <div class="terminal-input-row">
-    <span class="terminal-prompt">>>></span>
-    <input class="terminal-input" id="termInput" placeholder="Type Python code...">
-    <button class="terminal-run-btn" id="termRunBtn">Run</button>
-  </div>
-</div>
- 
-<!-- Settings Modal -->
-<div class="modal-overlay" id="settingsModal">
-  <div class="modal-frame">
-    <div class="modal-top">
-      <h3>Settings</h3>
-      <button class="modal-dismiss" id="closeSettings">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="setting-row">
-        <div class="setting-info">
-          <label>Email</label>
-          <div class="setting-sub" id="settingsEmail">Not signed in</div>
+
+        <div class="sidebar-footer">
+            <button class="profile-trigger" id="btnProfileMenu" aria-expanded="false" aria-haspopup="true">
+                <div class="avatar-circle" id="uiAvatarIcon">U</div>
+                <div class="profile-details">
+                    <div class="profile-name">
+                        <span id="uiUserName">User Profile</span>
+                        <span class="vip-indicator" id="uiVipBadge" aria-label="VIP Access Active">VIP</span>
+                    </div>
+                    <div class="profile-status" id="uiUserPlan">Standard Tier</div>
+                </div>
+            </button>
+            
+            <div class="dropdown-menu" id="profileDropdownMenu" role="menu">
+                <button class="menu-action" id="btnOpenVipModal" role="menuitem">
+                    <svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                    Activate VIP Code
+                </button>
+                <button class="menu-action" id="btnSettings" role="menuitem">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    System Settings
+                </button>
+                <div class="menu-divider"></div>
+                <button class="menu-action danger" id="btnLogout" role="menuitem">
+                    <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4m7 14l5-5-5-5m5 5H9"/></svg>
+                    Sign Out
+                </button>
+            </div>
         </div>
-      </div>
-      <div class="menu-divider"></div>
-      <button class="danger-btn" id="clearChatsBtn">Delete All Chat History</button>
+    </aside>
+
+    <main class="app-main">
+        
+        <header class="app-topbar">
+            <div class="topbar-left">
+                <button class="mobile-menu-btn" id="btnToggleSidebar" aria-label="Toggle Sidebar">
+                    <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
+                <h1 class="chat-header-title" id="uiChatTitle">New Session</h1>
+            </div>
+            
+            <div class="topbar-tools">
+                <button class="tool-toggle" id="btnToggleEdu" aria-pressed="false" title="Toggle Document Retrieval (RAG)">
+                    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20V4H6.5A2.5 2.5 0 0 0 4 6.5v13z"/></svg>
+                    <span>@education mode</span>
+                </button>
+                <button class="tool-toggle" id="btnToggleTerminal" aria-pressed="false" title="Open Python Terminal">
+                    <svg viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                    <span>Terminal</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="chat-viewport" id="chatViewport">
+            <div class="chat-content-max" id="chatFeed">
+                </div>
+        </div>
+
+        <div class="input-dock">
+            <div class="input-card">
+                
+                <div class="attachment-rack" id="attachmentRack">
+                    </div>
+
+                <div class="textarea-wrapper">
+                    <textarea 
+                        id="mainTextInput" 
+                        class="main-textarea" 
+                        rows="1" 
+                        placeholder="Message Pratham AI... Use @education for documents."
+                        aria-label="Message Input Area"
+                    ></textarea>
+                    
+                    <div class="composer-toolbar">
+                        <div class="toolbar-left">
+                            <button class="btn-icon" id="btnAttachFile" aria-label="Attach Document">
+                                <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                            </button>
+                            <input type="file" id="hiddenFileInput" style="display:none;" aria-hidden="true">
+                        </div>
+                        <div class="toolbar-right">
+                            <button class="btn-send" id="btnSubmitMessage" disabled aria-label="Send Message">
+                                <svg viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="disclaimer-text">
+                Pratham AI can make mistakes. Verify critical code and information.
+            </p>
+        </div>
+
+        <div class="terminal-drawer" id="terminalPanel" aria-hidden="true">
+            <div class="term-header-bar">
+                <div class="term-title">
+                    <div class="mac-dots">
+                        <div class="mac-dot md-red"></div>
+                        <div class="mac-dot md-yel"></div>
+                        <div class="mac-dot md-grn"></div>
+                    </div>
+                    Python 3.11 Sandbox (WASM)
+                </div>
+                <div class="term-actions">
+                    <button class="btn-term-action" id="btnClearTerm">Clear</button>
+                    <button class="btn-term-action" id="btnCloseTerm">✕</button>
+                </div>
+            </div>
+            <div class="term-output-area" id="termOutputDisplay">
+                <span class="t-sys">Awaiting initialization...</span>
+            </div>
+            <div class="term-input-row">
+                <span class="term-prompt-symbol">>>></span>
+                <input type="text" class="term-input-field" id="termInputField" placeholder="Write python code and press Enter" autocomplete="off" spellcheck="false">
+            </div>
+        </div>
+
+    </main>
+
+    <div class="overlay-backdrop" id="modalBackdrop" aria-hidden="true">
+        <div class="modal-card" id="vipModalCard" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">VIP Access</h2>
+                <button class="btn-close-modal" id="btnCloseVipModal" aria-label="Close dialog">
+                    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-text">Enter the creator/supervisor secret code to bypass GitHub logging and unlock full architectural features.</p>
+                <div class="form-group" id="vipFormGroup">
+                    <label class="form-label" for="vipCodeInput">Secret Code</label>
+                    <input type="password" id="vipCodeInput" class="form-input" placeholder="e.g. 3108...">
+                    <span class="form-error-msg" id="vipErrorMsg">Invalid authorization code.</span>
+                </div>
+                <button class="btn-primary" id="btnSubmitVipCode">
+                    Authenticate
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
- 
-<script src="https://js.puter.com/v2/"></script>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
- 
-<script>
-// ═══════════════════════════════════════════════════════════════
-// CONFIG
-// ═══════════════════════════════════════════════════════════════
-const API = 'https://web-production-503208.up.railway.app';
-let sessionToken = localStorage.getItem('pratham_token') || null;
-let cachedUser   = JSON.parse(localStorage.getItem('pratham_user') || 'null');
-let activeConvoId = localStorage.getItem('pratham_convo_id') ? parseInt(localStorage.getItem('pratham_convo_id')) : null;
-let busy = false;
-let pendingFile = null;
-let pendingFileIsImage = false;
-let currentPreviewBlob = null;
-let currentPreviewFilename = 'file';
-let pyodide = null;
-let pyodideLoading = false;
- 
-if (typeof marked !== 'undefined') {
-  marked.setOptions({ breaks:true, gfm:true,
-    highlight:(code,lang)=>{
-      const l = hljs.getLanguage(lang) ? lang : 'plaintext';
-      return hljs.highlight(code,{language:l}).value;
-    }
-  });
-}
- 
-// ═══════════════════════════════════════════════════════════════
-// SIDEBAR TOGGLE
-// ═══════════════════════════════════════════════════════════════
-const sidebar  = document.getElementById('sidebar');
-const backdrop = document.getElementById('sidebarBackdrop');
-document.getElementById('menuBtn').addEventListener('click',e=>{e.stopPropagation();sidebar.classList.contains('open')?closeSidebar():openSidebar();});
-backdrop.addEventListener('click',closeSidebar);
-function closeSidebar(){sidebar.classList.remove('open');backdrop.classList.remove('active');}
-function openSidebar(){sidebar.classList.add('open');backdrop.classList.add('active');}
- 
-const profileToggle = document.getElementById('profileToggleBtn');
-const profileMenu   = document.getElementById('profileMenu');
-profileToggle.addEventListener('click',e=>{e.stopPropagation();profileMenu.classList.toggle('open');});
-document.addEventListener('click',e=>{if(!profileMenu.contains(e.target)&&e.target!==profileToggle)profileMenu.classList.remove('open');});
- 
-const settingsModal = document.getElementById('settingsModal');
-document.getElementById('menuSettingsBtn').addEventListener('click',()=>{profileMenu.classList.remove('open');settingsModal.classList.add('open');});
-document.getElementById('closeSettings').addEventListener('click',()=>settingsModal.classList.remove('open'));
-document.getElementById('menuLogoutBtn').addEventListener('click',()=>{profileMenu.classList.remove('open');doSignOut();});
-document.getElementById('clearChatsBtn').addEventListener('click',()=>{if(confirm('Delete ALL conversations?')){localStorage.removeItem('pratham_convo_id');activeConvoId=null;renderNewChat();settingsModal.classList.remove('open');}});
- 
-// ═══════════════════════════════════════════════════════════════
-// INPUT
-// ═══════════════════════════════════════════════════════════════
-const msgInput = document.getElementById('msgInput');
-const sendBtn  = document.getElementById('sendBtn');
-msgInput.addEventListener('input',()=>{
-  msgInput.style.height='auto';
-  msgInput.style.height=Math.min(msgInput.scrollHeight,200)+'px';
-  sendBtn.disabled=!msgInput.value.trim()&&!pendingFile;
-});
-msgInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();if(!sendBtn.disabled&&!busy)handleSend();}});
-window.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();document.getElementById('newChatBtn').click();}});
-function selectPrompt(v){if(busy)return;msgInput.value=v;msgInput.focus();msgInput.dispatchEvent(new Event('input'));}
- 
-// ═══════════════════════════════════════════════════════════════
-// FILE ATTACHMENT
-// ═══════════════════════════════════════════════════════════════
-const fileInput = document.getElementById('fileInput');
-document.getElementById('attachBtn').addEventListener('click',()=>fileInput.click());
- 
-fileInput.addEventListener('change',()=>{
-  const f=fileInput.files[0]; if(!f) return;
-  pendingFile=f; pendingFileIsImage=f.type.startsWith('image/');
-  renderChip(); fileInput.value=''; sendBtn.disabled=false;
-});
- 
-function renderChip(){
-  const bar=document.getElementById('chipBar');
-  if(!pendingFile){bar.innerHTML='';bar.style.display='none';return;}
-  bar.style.display='flex';
-  if(pendingFileIsImage){
-    const r=new FileReader(); r.onload=e=>{
-      bar.innerHTML=`<div class="file-chip"><img src="${e.target.result}"><span>${pendingFile.name}</span><button class="chip-remove" onclick="clearPending()">✕</button></div>`;
-    }; r.readAsDataURL(pendingFile);
-  } else {
-    bar.innerHTML=`<div class="file-chip"><span>📎 ${pendingFile.name}</span><button class="chip-remove" onclick="clearPending()">✕</button></div>`;
-  }
-}
-function clearPending(){pendingFile=null;pendingFileIsImage=false;renderChip();sendBtn.disabled=!msgInput.value.trim();}
- 
-function fileToBase64(f){
-  return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(f);});
-}
- 
-async function uploadFile(conversationId){
-  if(!pendingFile||!conversationId) return;
-  if(pendingFileIsImage){
-    try{
-      const b64=await fileToBase64(pendingFile);
-      const resp=await fetch(`${API}/analyze-image`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${sessionToken}`},body:JSON.stringify({image_base64:b64,mime_type:pendingFile.type,conversation_id:conversationId})});
-      const d=await resp.json();
-      if(d.description) addMsg('model',`_📷 Image read: ${d.description.substring(0,200)}${d.description.length>200?'...':''}_`);
-    }catch(e){console.error(e);}
-  } else {
-    const fd=new FormData(); fd.append('file',pendingFile); fd.append('conversation_id',String(conversationId));
-    try{await fetch(`${API}/upload`,{method:'POST',headers:{Authorization:`Bearer ${sessionToken}`},body:fd});}catch(e){}
-  }
-  pendingFile=null; pendingFileIsImage=false; renderChip();
-}
- 
-// ═══════════════════════════════════════════════════════════════
-// AUTH — FIXED: wait for google to load instead of window.onload
-// ═══════════════════════════════════════════════════════════════
-function initWhenGoogleReady(){
-  if(typeof google!=='undefined'&&google.accounts){
-    google.accounts.id.initialize({
-      client_id:'352716901368-sp0550kmd9jb9ob4b5adrq6npltq4jht.apps.googleusercontent.com',
-      callback:handleGoogleCredential
-    });
-    if(sessionToken&&cachedUser) setupUI(cachedUser);
-    else renderSignedOut();
-  } else {
-    setTimeout(initWhenGoogleReady,100);
-  }
-}
-document.addEventListener('DOMContentLoaded',initWhenGoogleReady);
- 
-async function handleGoogleCredential(response){
-  try{
-    const res=await fetch(`${API}/auth/google`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id_token:response.credential})});
-    if(!res.ok) throw new Error('Auth failed');
-    const d=await res.json();
-    sessionToken=d.session_token; cachedUser=d.user;
-    localStorage.setItem('pratham_token',sessionToken);
-    localStorage.setItem('pratham_user',JSON.stringify(cachedUser));
-    setupUI(cachedUser);
-  }catch(e){doSignOut();}
-}
- 
-function setupUI(user){
-  document.getElementById('googleSignInContainer').style.display='none';
-  document.getElementById('profileToggleBtn').style.display='flex';
-  document.getElementById('userAvatarText').textContent=(user.name||'P').charAt(0).toUpperCase();
-  document.getElementById('profileName').textContent=user.name||'User';
-  document.getElementById('settingsEmail').textContent=user.email||'Connected';
-  if(activeConvoId) loadConvo(activeConvoId); else renderNewChat();
-  syncConvos();
-}
- 
-function doSignOut(){
-  sessionToken=null; activeConvoId=null; cachedUser=null;
-  ['pratham_token','pratham_user','pratham_convo_id'].forEach(k=>localStorage.removeItem(k));
-  document.getElementById('profileToggleBtn').style.display='none';
-  document.getElementById('convoList').innerHTML='';
-  renderSignedOut();
-}
- 
-function renderSignedOut(){
-  document.getElementById('chatCol').innerHTML=`
-    <div class="welcome-state">
-      <h1 class="welcome-title">Welcome to Pratham AI</h1>
-      <p style="color:var(--text-secondary);margin-bottom:24px;font-size:15px;">Sign in to sync your conversations.</p>
-      <div id="gsiMain"></div>
-    </div>`;
-  if(typeof google!=='undefined'&&google.accounts){
-    google.accounts.id.renderButton(document.getElementById('gsiMain'),{theme:'filled_blue',size:'large',text:'continue_with'});
-    document.getElementById('googleSignInContainer').style.display='block';
-    google.accounts.id.renderButton(document.getElementById('googleSignInContainer'),{theme:'outline',size:'medium'});
-  }
-  msgInput.disabled=true; msgInput.placeholder='Sign in to start chatting.';
-  document.getElementById('topbarTitle').textContent='';
-}
- 
-function renderNewChat(){
-  document.getElementById('chatCol').innerHTML=`
-    <div class="welcome-state">
-      <h1 class="welcome-title">How can I help you today?</h1>
-      <div class="suggestion-grid">
-        <div class="suggestion-card" onclick="selectPrompt('Generate an image of a futuristic city at night')"><span class="suggestion-icon">🎨</span><span class="suggestion-text">Generate image</span><span class="suggestion-sub">Create AI art from your description</span></div>
-        <div class="suggestion-card" onclick="selectPrompt('Write a Python script to analyze a CSV and plot a chart')"><span class="suggestion-icon">💻</span><span class="suggestion-text">Write code</span><span class="suggestion-sub">Build, debug, explain code</span></div>
-        <div class="suggestion-card" onclick="selectPrompt('Summarize this article for me')"><span class="suggestion-icon">📝</span><span class="suggestion-text">Summarize</span><span class="suggestion-sub">Condense long text fast</span></div>
-        <div class="suggestion-card" onclick="selectPrompt('Draft a professional email politely requesting a deadline extension')"><span class="suggestion-icon">✉️</span><span class="suggestion-text">Draft message</span><span class="suggestion-sub">Emails, letters, posts</span></div>
-      </div>
-    </div>`;
-  msgInput.disabled=false; msgInput.placeholder='How can Pratham AI help you today?';
-  document.getElementById('topbarTitle').textContent='';
-}
- 
-// ═══════════════════════════════════════════════════════════════
-// CONVERSATIONS
-// ═══════════════════════════════════════════════════════════════
-async function syncConvos(){
-  if(!sessionToken) return;
-  try{
-    const r=await fetch(`${API}/conversations`,{headers:{Authorization:`Bearer ${sessionToken}`}});
-    if(r.status===401){doSignOut();return;}
-    renderConvoList(await r.json());
-  }catch(e){}
-}
- 
-function renderConvoList(list){
-  const el=document.getElementById('convoList'); el.innerHTML='';
-  if(!list.length) return;
-  const lbl=document.createElement('div'); lbl.className='convo-label'; lbl.textContent='Recent chats'; el.appendChild(lbl);
-  list.forEach(c=>{
-    const item=document.createElement('div'); item.className=`convo-item ${c.id===activeConvoId?'active':''}`;
-    const txt=document.createElement('span'); txt.className='convo-title-text'; txt.textContent=c.title||'Chat'; item.appendChild(txt);
-    const del=document.createElement('button'); del.className='delete-convo-btn'; del.innerHTML='✕';
-    del.addEventListener('click',async e=>{e.stopPropagation();if(confirm('Delete?')){await fetch(`${API}/conversations/${c.id}`,{method:'DELETE',headers:{Authorization:`Bearer ${sessionToken}`}});if(activeConvoId===c.id){activeConvoId=null;localStorage.removeItem('pratham_convo_id');renderNewChat();}syncConvos();}});
-    item.appendChild(del);
-    txt.addEventListener('click',()=>{loadConvo(c.id);if(window.innerWidth<=1024)closeSidebar();});
-    el.appendChild(item);
-  });
-}
- 
-document.getElementById('newChatBtn').addEventListener('click',()=>{
-  activeConvoId=null; localStorage.removeItem('pratham_convo_id');
-  pendingFile=null; renderChip(); renderNewChat(); syncConvos();
-  if(window.innerWidth<=1024) closeSidebar();
-});
- 
-async function loadConvo(id){
-  activeConvoId=id; localStorage.setItem('pratham_convo_id',String(id));
-  document.getElementById('chatCol').innerHTML='';
-  try{
-    const r=await fetch(`${API}/conversations/${id}/messages`,{headers:{Authorization:`Bearer ${sessionToken}`}});
-    if(r.status===401){doSignOut();return;}
-    const msgs=await r.json();
-    msgs.forEach(m=>addMsg(m.role==='assistant'?'model':'user',m.content));
-    syncConvos();
-    setTimeout(()=>{document.getElementById('chatScroll').scrollTop=99999;},80);
-    if(msgs.length) document.getElementById('topbarTitle').textContent=msgs[0]?.content?.substring(0,40)||'Chat';
-  }catch(e){}
-}
- 
-// ═══════════════════════════════════════════════════════════════
-// PREVIEW PANEL
-// ═══════════════════════════════════════════════════════════════
-function openPreview(title, content, type){
-  const panel=document.getElementById('previewPanel');
-  const body=document.getElementById('previewBody');
-  const tabs=document.getElementById('previewTabs');
-  document.getElementById('previewTitle').textContent=title;
-  currentPreviewFilename=title; body.innerHTML=''; tabs.innerHTML='';
- 
-  if(type==='html'){
-    // Two tabs: Preview and Code
-    ['Preview','Code'].forEach((t,i)=>{
-      const tab=document.createElement('div'); tab.className='preview-tab'+(i===0?' active':'');
-      tab.textContent=t; tab.addEventListener('click',()=>{
-        tabs.querySelectorAll('.preview-tab').forEach(x=>x.classList.remove('active')); tab.classList.add('active');
-        body.innerHTML='';
-        if(t==='Preview'){const iframe=document.createElement('iframe');iframe.src=URL.createObjectURL(new Blob([content],{type:'text/html'}));iframe.sandbox='allow-scripts allow-same-origin';body.appendChild(iframe);}
-        else{const pre=document.createElement('pre');pre.textContent=content;body.appendChild(pre);}
-      }); tabs.appendChild(tab);
-    });
-    const iframe=document.createElement('iframe');
-    iframe.src=URL.createObjectURL(new Blob([content],{type:'text/html'}));
-    iframe.sandbox='allow-scripts allow-same-origin'; body.appendChild(iframe);
-    currentPreviewBlob=new Blob([content],{type:'text/html'});
-  } else if(type==='image'){
-    const wrap=document.createElement('div'); wrap.className='preview-img-wrap';
-    const img=document.createElement('img'); img.src=content; wrap.appendChild(img); body.appendChild(wrap);
-    currentPreviewBlob=null;
-  } else {
-    const pre=document.createElement('pre'); pre.textContent=content; body.appendChild(pre);
-    currentPreviewBlob=new Blob([content],{type:'text/plain'});
-  }
- 
-  panel.classList.add('open'); document.getElementById('previewBackdrop').classList.add('active');
-}
- 
-function closePreview(){
-  document.getElementById('previewPanel').classList.remove('open');
-  document.getElementById('previewBackdrop').classList.remove('active');
-}
-document.getElementById('previewCloseBtn').addEventListener('click',closePreview);
-document.getElementById('previewBackdrop').addEventListener('click',closePreview);
-document.getElementById('previewNewTabBtn').addEventListener('click',()=>{if(currentPreviewBlob)window.open(URL.createObjectURL(currentPreviewBlob),'_blank');});
-document.getElementById('previewDlBtn').addEventListener('click',()=>{if(currentPreviewBlob){const a=document.createElement('a');a.href=URL.createObjectURL(currentPreviewBlob);a.download=currentPreviewFilename;a.click();}});
- 
-// ═══════════════════════════════════════════════════════════════
-// TOOL BLOCK (Claude-style "Creating file..." steps)
-// ═══════════════════════════════════════════════════════════════
-function createToolBlock(label, detail){
-  const wrap=document.createElement('div'); wrap.className='tool-block';
-  const header=document.createElement('div'); header.className='tool-header';
-  const dot=document.createElement('div'); dot.className='tool-status-dot running';
-  const lbl=document.createElement('span'); lbl.textContent=label;
-  const tlabel=document.createElement('span'); tlabel.className='tool-label'; tlabel.textContent=detail||'';
-  const chev=document.createElement('span'); chev.className='tool-chevron'; chev.textContent='▾';
-  header.appendChild(dot); header.appendChild(lbl); header.appendChild(tlabel); header.appendChild(chev);
-  const body=document.createElement('div'); body.className='tool-body';
-  if(detail) body.textContent=detail;
-  header.addEventListener('click',()=>{body.classList.toggle('open');chev.classList.toggle('open');});
-  wrap.appendChild(header); wrap.appendChild(body);
-  return {wrap, dot, body, lbl};
-}
- 
-function finishToolBlock(block, status='done', outputText=''){
-  block.dot.className='tool-status-dot '+(status==='error'?'error':'done');
-  if(outputText) block.body.textContent=outputText;
-}
- 
-// ═══════════════════════════════════════════════════════════════
-// CODE BUTTONS — adds View / Preview / Run under code blocks
-// ═══════════════════════════════════════════════════════════════
-function addCodeButtons(container){
-  container.querySelectorAll('pre code').forEach(block=>{
-    if(block.dataset.btnAdded) return;
-    const code=block.textContent;
-    const lang=(block.className.match(/language-(\w+)/)||['',''])[1];
-    const isHtml=/<!DOCTYPE\s+html/i.test(code)||/<html[\s>]/i.test(code);
-    const isPy=lang==='python'||lang==='py';
- 
-    const row=document.createElement('div'); row.className='code-btn-row';
- 
-    if(isHtml){
-      const b=document.createElement('button'); b.className='code-btn'; b.textContent='▶ Preview';
-      b.addEventListener('click',()=>openPreview('HTML Preview',code,'html')); row.appendChild(b);
-    }
- 
-    const viewBtn=document.createElement('button'); viewBtn.className='code-btn'; viewBtn.textContent='📄 View';
-    viewBtn.addEventListener('click',()=>openPreview(`${lang||'code'} file`,code,'code')); row.appendChild(viewBtn);
- 
-    const copyBtn=document.createElement('button'); copyBtn.className='code-btn'; copyBtn.textContent='⎘ Copy';
-    copyBtn.addEventListener('click',()=>{navigator.clipboard.writeText(code);copyBtn.textContent='✓ Copied!';setTimeout(()=>copyBtn.textContent='⎘ Copy',1500);}); row.appendChild(copyBtn);
- 
-    if(isPy){
-      const runBtn=document.createElement('button'); runBtn.className='code-btn'; runBtn.textContent='▶ Run';
-      runBtn.addEventListener('click',()=>{openTerminal();runPyCode(code);}); row.appendChild(runBtn);
-    }
- 
-    block.parentElement.insertAdjacentElement('afterend',row);
-    block.dataset.btnAdded='1';
-  });
-}
- 
-function addLongDl(text, container){
-  if(text.length<=5000) return;
-  const blob=new Blob([text],{type:'text/plain'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download=`pratham-ai-${Date.now()}.txt`; a.className='long-dl-link';
-  a.innerHTML=`📄 <span>Long response (${text.length.toLocaleString()} chars) — <u>Download .txt</u></span>`;
-  container.appendChild(a);
-}
- 
-// ═══════════════════════════════════════════════════════════════
-// IMAGE GENERATION (Puter.js → flux-schnell)
-// ═══════════════════════════════════════════════════════════════
-async function checkImageGen(text, parentEl){
-  const m=text.match(/\[GENERATE_IMAGE:\s*([^\]]+)\]/);
-  if(!m) return text;
-  const prompt=m[1].trim();
-  const cleaned=text.replace(/\[GENERATE_IMAGE:[^\]]+\]/,'').trim();
- 
-  const tb=createToolBlock('🎨 Generating image…',prompt.substring(0,60));
-  parentEl.appendChild(tb.wrap);
- 
-  try{
-    const img=await puter.ai.txt2img(prompt,{model:'black-forest-labs/flux-schnell'});
-    img.className='gen-img-result'; img.alt=prompt;
-    img.addEventListener('click',()=>openPreview('Generated Image',img.src,'image'));
-    finishToolBlock(tb,'done','Image generated successfully');
-    parentEl.appendChild(img);
-    // Log to backend
-    fetch(`${API}/log-image-prompt`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${sessionToken}`},body:JSON.stringify({prompt})}).catch(()=>{});
-  }catch(e){
-    finishToolBlock(tb,'error','Image generation failed: '+e.message);
-  }
-  return cleaned;
-}
- 
-// ═══════════════════════════════════════════════════════════════
-// ADD MESSAGE
-// ═══════════════════════════════════════════════════════════════
-function addMsg(role, text){
-  const welcome=document.getElementById('chatCol').querySelector('.welcome-state');
-  if(welcome) welcome.remove();
- 
-  let clean=text;
-  if(role==='model'){
-    clean=text.replace(/\[STORE_MEMORY:[^\]]*\]/g,'').replace(/\[GENERATE_IMAGE:[^\]]*\]/g,'').trim();
-    if(!clean&&!text.includes('[GENERATE_IMAGE:')) return null;
-  }
- 
-  const container=document.createElement('div'); container.className='msg-container';
-  const lbl=document.createElement('div'); lbl.className=`msg-sender-label${role==='user'?' user':''}`; lbl.textContent=role==='user'?'You':'Pratham AI';
-  container.appendChild(lbl);
- 
-  const row=document.createElement('div'); row.className=`msg-row${role==='user'?' user':''}`;
-  const bubble=document.createElement('div'); bubble.className='msg';
- 
-  if(role==='model'){
-    row.appendChild(bubble); container.appendChild(row);
-    document.getElementById('chatCol').appendChild(container);
-    checkImageGen(text,bubble).then(t=>{
-      if(t&&typeof marked!=='undefined') bubble.innerHTML=DOMPurify.sanitize(marked.parse(t));
-      else if(t) bubble.textContent=t;
-      addCodeButtons(bubble);
-      addLongDl(t||'',container);
-    });
-  } else {
-    bubble.textContent=clean; row.appendChild(bubble); container.appendChild(row);
-    document.getElementById('chatCol').appendChild(container);
-  }
-  return bubble;
-}
- 
-// ═══════════════════════════════════════════════════════════════
-// THROTTLED RENDER (fixes lag on long responses)
-// ═══════════════════════════════════════════════════════════════
-let renderScheduled=false;
-function scheduleRender(node, getFn){
-  if(renderScheduled) return; renderScheduled=true;
-  requestAnimationFrame(()=>{
-    const s=getFn();
-    node.innerHTML=typeof marked!=='undefined'?DOMPurify.sanitize(marked.parse(s)):s;
-    renderScheduled=false;
-  });
-}
- 
-// ═══════════════════════════════════════════════════════════════
-// SEND
-// ═══════════════════════════════════════════════════════════════
-async function handleSend(){
-  const text=msgInput.value.trim();
-  if((!text&&!pendingFile)||busy) return;
-  busy=true; sendBtn.disabled=true;
-  msgInput.value=''; msgInput.style.height='auto';
-  addMsg('user',text||'(File attached)');
-  document.getElementById('chatScroll').scrollTop=99999;
- 
-  // Upload file BEFORE sending if conversation exists (fixes attachment timing bug)
-  const wasNew=!activeConvoId;
-  if(pendingFile&&activeConvoId) await uploadFile(activeConvoId);
- 
-  // Create model response container
-  const container=document.createElement('div'); container.className='msg-container';
-  const lbl=document.createElement('div'); lbl.className='msg-sender-label'; lbl.textContent='Pratham AI';
-  container.appendChild(lbl);
-  container.innerHTML+=`<div class="msg-row"><div class="msg" id="tempBubble"></div></div>`;
-  document.getElementById('chatCol').appendChild(container);
-  document.getElementById('chatScroll').scrollTop=99999;
- 
-  const bubble=container.querySelector('#tempBubble');
- 
-  // Loading indicator (video → fallback dots)
-  const vid=document.createElement('video'); vid.autoplay=true; vid.muted=true; vid.playsInline=true;
-  vid.className='loading-video-el'; vid.src='assets/intro_anim.webm';
-  vid.addEventListener('ended',()=>{if(vid.src.includes('intro_anim')){vid.src='assets/loop_anim.webm';vid.loop=true;vid.play().catch(()=>{});}});
-  vid.addEventListener('error',()=>{vid.remove();const d=document.createElement('div');d.className='thinking-state';d.innerHTML='Thinking<div class="dot-flashing"></div>';d.id='thinkDots';bubble.appendChild(d);});
-  bubble.appendChild(vid);
- 
-  function clearLoading(){const v=bubble.querySelector('.loading-video-el');if(v)v.remove();const d=document.getElementById('thinkDots');if(d)d.remove();}
- 
-  let accum='', buf='';
- 
-  try{
-    const resp=await fetch(`${API}/chat-stream`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${sessionToken}`},body:JSON.stringify({message:text||'Process the attached file.',conversation_id:activeConvoId})});
-    if(!resp.ok){if(resp.status===401)throw new Error('Session Expired');throw new Error('Server Error');}
- 
-    const reader=resp.body.getReader(); const dec=new TextDecoder(); let first=true;
- 
-    while(true){
-      const {done,value}=await reader.read(); if(done) break;
-      buf+=dec.decode(value,{stream:true});
-      const lines=buf.split('\n'); buf=lines.pop();
-      for(const line of lines){
-        const cl=line.trim(); if(!cl||!cl.startsWith('data:')) continue;
-        let p; try{p=JSON.parse(cl.replace(/^data:\s*/,''));}catch(e){continue;}
- 
-        if(p.type==='metadata'){
-          activeConvoId=parseInt(p.conversation_id);
-          localStorage.setItem('pratham_convo_id',String(activeConvoId));
-          syncConvos();
-          if(pendingFile&&wasNew){await uploadFile(activeConvoId);}
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <script>
+        /**
+         * PRATHAM AI - Enterprise Frontend Controller
+         * Architecture: State-driven UI updates, encapsulated modules.
+         */
+
+        // --- 1. Global State Management ---
+        const AppState = {
+            isVip: localStorage.getItem("pratham_is_vip") === "true",
+            eduModeActive: false,
+            isGenerating: false,
+            pendingFile: null,
+            pyodideReady: false,
+            theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        };
+
+        // --- 2. DOM Node Cache ---
+        const DOM = {
+            // Layout
+            sidebar: document.getElementById('mainSidebar'),
+            btnToggleSidebar: document.getElementById('btnToggleSidebar'),
+            
+            // Profile & VIP
+            btnProfileMenu: document.getElementById('btnProfileMenu'),
+            profileDropdownMenu: document.getElementById('profileDropdownMenu'),
+            btnOpenVipModal: document.getElementById('btnOpenVipModal'),
+            uiVipBadge: document.getElementById('uiVipBadge'),
+            uiAvatarIcon: document.getElementById('uiAvatarIcon'),
+            uiUserPlan: document.getElementById('uiUserPlan'),
+            
+            // Modals
+            modalBackdrop: document.getElementById('modalBackdrop'),
+            vipModalCard: document.getElementById('vipModalCard'),
+            btnCloseVipModal: document.getElementById('btnCloseVipModal'),
+            btnSubmitVipCode: document.getElementById('btnSubmitVipCode'),
+            vipCodeInput: document.getElementById('vipCodeInput'),
+            vipFormGroup: document.getElementById('vipFormGroup'),
+            
+            // Topbar
+            btnToggleEdu: document.getElementById('btnToggleEdu'),
+            btnToggleTerminal: document.getElementById('btnToggleTerminal'),
+            
+            // Chat View
+            chatViewport: document.getElementById('chatViewport'),
+            chatFeed: document.getElementById('chatFeed'),
+            
+            // Composer
+            mainTextInput: document.getElementById('mainTextInput'),
+            btnSubmitMessage: document.getElementById('btnSubmitMessage'),
+            btnAttachFile: document.getElementById('btnAttachFile'),
+            hiddenFileInput: document.getElementById('hiddenFileInput'),
+            attachmentRack: document.getElementById('attachmentRack'),
+            
+            // Terminal
+            terminalPanel: document.getElementById('terminalPanel'),
+            termOutputDisplay: document.getElementById('termOutputDisplay'),
+            termInputField: document.getElementById('termInputField'),
+            btnCloseTerm: document.getElementById('btnCloseTerm'),
+            btnClearTerm: document.getElementById('btnClearTerm')
+        };
+
+        // --- 3. Initialization & Setup ---
+        function initApp() {
+            configureMarkdown();
+            bindEventListeners();
+            applyVipStateUI();
+            renderWelcomeScreen();
+            
+            // Keyboard shortcut for New Chat (Cmd/Ctrl + K)
+            window.addEventListener('keydown', (e) => {
+                if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                    e.preventDefault();
+                    resetChatSession();
+                }
+            });
         }
-        else if(p.type==='token'){
-          if(first){clearLoading();bubble.innerHTML='';bubble.classList.add('streaming-cursor');first=false;}
-          accum+=p.text;
-          const disp=accum.replace(/\[STORE_MEMORY:[^\]]*(\]|$)/g,'').replace(/\[GENERATE_IMAGE:[^\]]*(\]|$)/g,'');
-          scheduleRender(bubble,()=>disp);
-          document.getElementById('chatScroll').scrollTop=99999;
+
+        function configureMarkdown() {
+            marked.setOptions({
+                highlight: function(code, lang) {
+                    const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+                    return hljs.highlight(code, { language }).value;
+                },
+                breaks: true,
+                gfm: true
+            });
         }
-        else if(p.type==='error'){throw new Error(p.text);}
-      }
-    }
- 
-    clearLoading(); bubble.classList.remove('streaming-cursor');
-    let final=accum.replace(/\[STORE_MEMORY:[^\]]*\]/g,'').trim();
-    if(final.includes('[GENERATE_IMAGE:')) final=await checkImageGen(accum,bubble);
-    if(typeof marked!=='undefined') bubble.innerHTML=DOMPurify.sanitize(marked.parse(final));
-    else bubble.textContent=final;
-    addCodeButtons(bubble);
-    addLongDl(final,container);
- 
-    // Update topbar title with first message snippet
-    if(!document.getElementById('topbarTitle').textContent) document.getElementById('topbarTitle').textContent=(text||'Chat').substring(0,50);
- 
-  }catch(err){
-    clearLoading(); bubble.classList.remove('streaming-cursor');
-    bubble.innerHTML=`<span style="color:var(--accent);">⚠️ ${err.message}. Please try again.</span>`;
-    if(err.message==='Session Expired') doSignOut();
-  }
-  busy=false; msgInput.focus();
-}
-sendBtn.addEventListener('click',handleSend);
- 
-// ═══════════════════════════════════════════════════════════════
-// PYODIDE TERMINAL
-// ═══════════════════════════════════════════════════════════════
-function openTerminal(){
-  const tw=document.getElementById('terminalWrap');
-  tw.classList.add('open');
-  if(!pyodide&&!pyodideLoading) loadPy();
-}
- 
-async function loadPy(){
-  pyodideLoading=true;
-  termOut('Loading Python runtime…','t-ok');
-  pyodide=await loadPyodide();
-  pyodide.runPython(`
-import sys,io
-class _IO:
-    def __init__(self): self.buf=""
-    def write(self,t): self.buf+=t
-    def flush(self): pass
-sys.stdout=_IO(); sys.stderr=_IO()
-  `);
-  pyodideLoading=false;
-  termOut('Python ready! Try: print("Hello World")','t-ok');
-}
- 
-function termOut(text,cls='t-out'){
-  const out=document.getElementById('termOutput');
-  const line=document.createElement('div'); line.className=cls; line.textContent=text; out.appendChild(line); out.scrollTop=out.scrollHeight;
-}
- 
-async function runPyCode(code){
-  const py=pyodide;
-  if(!py){termOut('Python still loading, please wait…','t-err');return;}
-  termOut(code.split('\n')[0]+(code.includes('\n')?'\n...':''),'t-cmd');
-  try{
-    py.runPython("sys.stdout.buf='';sys.stderr.buf=''");
-    await py.runPythonAsync(code);
-    const out=py.runPython("sys.stdout.buf");
-    if(out) termOut(out);
-    const err=py.runPython("sys.stderr.buf");
-    if(err) termOut(err,'t-err');
-  }catch(e){termOut(e.message,'t-err');}
-}
- 
-document.getElementById('terminalToggleBtn').addEventListener('click',()=>{
-  const tw=document.getElementById('terminalWrap');
-  tw.classList.toggle('open');
-  if(tw.classList.contains('open')&&!pyodide&&!pyodideLoading) loadPy();
-});
-document.getElementById('closeTermBtn').addEventListener('click',()=>document.getElementById('terminalWrap').classList.remove('open'));
-document.getElementById('clearTermBtn').addEventListener('click',()=>document.getElementById('termOutput').innerHTML='');
-document.getElementById('termRunBtn').addEventListener('click',()=>{const v=document.getElementById('termInput').value.trim();if(v){runPyCode(v);document.getElementById('termInput').value='';}});
-document.getElementById('termInput').addEventListener('keydown',e=>{if(e.key==='Enter'){const v=e.target.value.trim();if(v){runPyCode(v);e.target.value='';}e.preventDefault();}});
-</script>
+
+        // --- 4. Event Binding ---
+        function bindEventListeners() {
+            // Sidebar Mobile Toggle
+            DOM.btnToggleSidebar.addEventListener('click', () => {
+                DOM.sidebar.classList.toggle('is-open');
+            });
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth <= 900 && 
+                    !DOM.sidebar.contains(e.target) && 
+                    !DOM.btnToggleSidebar.contains(e.target)) {
+                    DOM.sidebar.classList.remove('is-open');
+                }
+            });
+
+            // Profile Dropdown
+            DOM.btnProfileMenu.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = DOM.profileDropdownMenu.classList.contains('is-open');
+                DOM.profileDropdownMenu.classList.toggle('is-open');
+                DOM.btnProfileMenu.setAttribute('aria-expanded', !isOpen);
+            });
+            document.addEventListener('click', () => {
+                DOM.profileDropdownMenu.classList.remove('is-open');
+                DOM.btnProfileMenu.setAttribute('aria-expanded', 'false');
+            });
+
+            // VIP Modal Flow
+            DOM.btnOpenVipModal.addEventListener('click', () => openModal(DOM.vipModalCard));
+            DOM.btnCloseVipModal.addEventListener('click', closeModal);
+            DOM.btnSubmitVipCode.addEventListener('click', verifyVipCode);
+            DOM.vipCodeInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') verifyVipCode();
+            });
+
+            // Tool Toggles
+            DOM.btnToggleEdu.addEventListener('click', toggleEduMode);
+            DOM.btnToggleTerminal.addEventListener('click', toggleTerminalPanel);
+            
+            // Terminal Internal Actions
+            DOM.btnCloseTerm.addEventListener('click', () => {
+                DOM.terminalPanel.classList.remove('is-open');
+                DOM.terminalPanel.setAttribute('aria-hidden', 'true');
+                DOM.btnToggleTerminal.classList.remove('is-active');
+            });
+            DOM.btnClearTerm.addEventListener('click', () => DOM.termOutputDisplay.innerHTML = '');
+            DOM.termInputField.addEventListener('keydown', handleTerminalInput);
+
+            // Composer Textarea Auto-resize & Input parsing
+            DOM.mainTextInput.addEventListener('input', handleComposerInput);
+            DOM.mainTextInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    if (!DOM.btnSubmitMessage.disabled) executeUserPrompt();
+                }
+            });
+
+            // Attachments
+            DOM.btnAttachFile.addEventListener('click', () => DOM.hiddenFileInput.click());
+            DOM.hiddenFileInput.addEventListener('change', handleFileSelection);
+            DOM.btnSubmitMessage.addEventListener('click', executeUserPrompt);
+        }
+
+        // --- 5. UI Render Functions ---
+        function renderWelcomeScreen() {
+            DOM.chatFeed.innerHTML = `
+                <div class="hero-welcome">
+                    <h1 class="hero-title">How can I help you today?</h1>
+                    <p class="hero-subtitle">I am Pratham AI. I can analyze code, answer questions, and query your documents.</p>
+                    
+                    <div class="prompt-grid">
+                        <div class="prompt-card" onclick="injectPromptText('Analyze the time complexity of this Python script')">
+                            <div class="prompt-icon">
+                                <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                            </div>
+                            <span class="prompt-headline">Code Analysis</span>
+                            <span class="prompt-desc">Optimize algorithms and debug errors</span>
+                        </div>
+                        <div class="prompt-card" onclick="injectPromptText('@education Summarize the key points in my documents')">
+                            <div class="prompt-icon">
+                                <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20V4H6.5A2.5 2.5 0 0 0 4 6.5v13z"/></svg>
+                            </div>
+                            <span class="prompt-headline">Document Querying</span>
+                            <span class="prompt-desc">Extract facts using @education mode</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function injectPromptText(text) {
+            DOM.mainTextInput.value = text;
+            handleComposerInput();
+            DOM.mainTextInput.focus();
+        }
+
+        // --- 6. Composer & Input Logic ---
+        function handleComposerInput() {
+            const el = DOM.mainTextInput;
+            // Auto-resize
+            el.style.height = 'auto';
+            el.style.height = Math.min(el.scrollHeight, 250) + 'px';
+            
+            // Check button state
+            const hasText = el.value.trim().length > 0;
+            DOM.btnSubmitMessage.disabled = (!hasText && !AppState.pendingFile) || AppState.isGenerating;
+
+            // Auto-trigger @education mode visual if typed
+            if (el.value.includes('@education') && !AppState.eduModeActive) {
+                toggleEduMode(true);
+            }
+        }
+
+        function handleFileSelection(e) {
+            const file = e.target.files[0];
+            if (file) {
+                AppState.pendingFile = file;
+                DOM.attachmentRack.style.display = 'flex';
+                DOM.attachmentRack.innerHTML = `
+                    <div class="attachment-chip">
+                        <svg viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                        <span>${file.name}</span>
+                        <button class="btn-remove-chip" onclick="clearFileAttachment()" aria-label="Remove attachment">✕</button>
+                    </div>
+                `;
+                handleComposerInput(); // Update button state
+            }
+        }
+
+        function clearFileAttachment() {
+            AppState.pendingFile = null;
+            DOM.hiddenFileInput.value = '';
+            DOM.attachmentRack.style.display = 'none';
+            handleComposerInput();
+        }
+
+        function toggleEduMode(forceState) {
+            AppState.eduModeActive = typeof forceState === 'boolean' ? forceState : !AppState.eduModeActive;
+            
+            if (AppState.eduModeActive) {
+                DOM.btnToggleEdu.classList.add('is-active');
+                DOM.btnToggleEdu.setAttribute('aria-pressed', 'true');
+                DOM.mainTextInput.placeholder = "Querying loaded documents... (@education active)";
+            } else {
+                DOM.btnToggleEdu.classList.remove('is-active');
+                DOM.btnToggleEdu.setAttribute('aria-pressed', 'false');
+                DOM.mainTextInput.placeholder = "Message Pratham AI...";
+            }
+        }
+
+        // --- 7. VIP & Modal Logic ---
+        function openModal(modalNode) {
+            DOM.modalBackdrop.classList.add('is-visible');
+            DOM.modalBackdrop.setAttribute('aria-hidden', 'false');
+            // Small delay to allow CSS animation to trigger properly
+            setTimeout(() => DOM.vipCodeInput.focus(), 100);
+        }
+
+        function closeModal() {
+            DOM.modalBackdrop.classList.remove('is-visible');
+            DOM.modalBackdrop.setAttribute('aria-hidden', 'true');
+            DOM.vipFormGroup.classList.remove('has-error');
+            DOM.vipCodeInput.value = '';
+        }
+
+        function applyVipStateUI() {
+            if (AppState.isVip) {
+                DOM.uiVipBadge.style.display = 'inline-block';
+                DOM.uiAvatarIcon.classList.add('is-vip');
+                DOM.uiUserPlan.textContent = "Creator / Supervisor Access";
+                DOM.btnOpenVipModal.style.display = "none";
+            }
+        }
+
+        function verifyVipCode() {
+            const code = DOM.vipCodeInput.value.trim();
+            const originalText = DOM.btnSubmitVipCode.innerHTML;
+            
+            DOM.btnSubmitVipCode.innerHTML = `<div class="spinner"></div> Verifying...`;
+            DOM.btnSubmitVipCode.disabled = true;
+
+            // Simulate Network Request for security verification
+            setTimeout(() => {
+                if (code === "31082011") {
+                    AppState.isVip = true;
+                    localStorage.setItem("pratham_is_vip", "true");
+                    applyVipStateUI();
+                    closeModal();
+                    
+                    // Trigger the specific Relationship questionnaire flow
+                    appendMessageToFeed('model', `**[SYSTEM ALERT]: VIP Authentication Successful.**\n\nWelcome back. GitHub auto-logging has been bypassed for this session to ensure privacy.\n\n*For internal contextual memory logging (saving to \`vip.txt\`), please state your name and confirm your specific relationship with Pratham.*`);
+                } else {
+                    DOM.vipFormGroup.classList.add('has-error');
+                }
+                
+                DOM.btnSubmitVipCode.innerHTML = originalText;
+                DOM.btnSubmitVipCode.disabled = false;
+            }, 800); // Artificial delay for effect
+        }
+
+        // --- 8. Core Chat Engine ---
+        function createMessageNode(role, rawContent) {
+            const isUser = role === 'user';
+            
+            const node = document.createElement('div');
+            node.className = 'message-group';
+            
+            // Meta Label
+            const meta = document.createElement('div');
+            meta.className = `message-meta ${isUser ? 'meta-user' : 'meta-ai'}`;
+            if (isUser) {
+                meta.textContent = 'You';
+            } else {
+                meta.innerHTML = `<div class="ai-badge-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="#fff"/></svg></div> Pratham AI`;
+            }
+
+            // Body Wrapper
+            const wrapper = document.createElement('div');
+            wrapper.className = `message-body-wrapper ${isUser ? 'wrapper-user' : 'wrapper-ai'}`;
+            
+            // Content
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            
+            if (isUser) {
+                content.textContent = rawContent;
+            } else {
+                // Parse markdown safely
+                content.innerHTML = DOMPurify.sanitize(marked.parse(rawContent));
+            }
+
+            wrapper.appendChild(content);
+            node.appendChild(meta);
+            node.appendChild(wrapper);
+            
+            return { node, contentNode: content };
+        }
+
+        function appendMessageToFeed(role, text) {
+            // Remove hero screen if present
+            const hero = DOM.chatFeed.querySelector('.hero-welcome');
+            if (hero) hero.remove();
+
+            const { node, contentNode } = createMessageNode(role, text);
+            DOM.chatFeed.appendChild(node);
+            scrollToBottom();
+            return contentNode;
+        }
+
+        function appendStatusPill(text) {
+            const node = document.createElement('div');
+            node.className = 'message-group';
+            node.innerHTML = `
+                <div class="message-body-wrapper wrapper-ai">
+                    <div class="status-pill">
+                        <div class="spinner"></div>
+                        ${text}
+                    </div>
+                </div>
+            `;
+            DOM.chatFeed.appendChild(node);
+            scrollToBottom();
+            return node;
+        }
+
+        function scrollToBottom() {
+            // Use requestAnimationFrame to ensure DOM is updated before scrolling
+            requestAnimationFrame(() => {
+                DOM.chatViewport.scrollTo({
+                    top: DOM.chatViewport.scrollHeight,
+                    behavior: 'smooth'
+                });
+            });
+        }
+
+        // The main Execution Loop
+        async function executeUserPrompt() {
+            let promptText = DOM.mainTextInput.value.trim();
+            if (!promptText && !AppState.pendingFile) return;
+
+            // Lock UI
+            AppState.isGenerating = true;
+            DOM.btnSubmitMessage.disabled = true;
+            DOM.mainTextInput.value = '';
+            DOM.mainTextInput.style.height = 'auto';
+
+            // 1. Render User Message
+            let displayString = promptText;
+            if (AppState.pendingFile) {
+                displayString += `\n\n[Attached: ${AppState.pendingFile.name}]`;
+            }
+            appendMessageToFeed('user', displayString);
+
+            // Force internal backend flag for education
+            if (AppState.eduModeActive && !promptText.includes("@education")) {
+                promptText = "@education " + promptText;
+            }
+
+            // 2. Handle File Simulation (Would be an API call to /upload)
+            if (AppState.pendingFile) {
+                const statusNode = appendStatusPill(`Processing ${AppState.pendingFile.name} for RAG context...`);
+                await new Promise(r => setTimeout(r, 1200)); // Simulate upload
+                statusNode.remove();
+                clearFileAttachment();
+            }
+
+            // 3. Setup AI Response Node for Streaming
+            const hero = DOM.chatFeed.querySelector('.hero-welcome');
+            if (hero) hero.remove();
+
+            const responseNode = document.createElement('div');
+            responseNode.className = 'message-group';
+            responseNode.innerHTML = `
+                <div class="message-meta meta-ai">
+                    <div class="ai-badge-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="#fff"/></svg></div> Pratham AI
+                </div>
+                <div class="message-body-wrapper wrapper-ai">
+                    <div class="message-content cursor-blink" id="activeStreamTarget">Thinking...</div>
+                </div>
+            `;
+            DOM.chatFeed.appendChild(responseNode);
+            scrollToBottom();
+
+            const streamTarget = responseNode.querySelector('#activeStreamTarget');
+            let accumulatedResponse = "";
+
+            try {
+                // =========================================================
+                // DEMO STREAMING ENGINE (Replaces fetch to /chat-stream)
+                // =========================================================
+                
+                // Clear "Thinking..."
+                streamTarget.textContent = ""; 
+                
+                // Generate contextual demo response
+                let rawResponse = "";
+                if (promptText.includes("@education")) {
+                    rawResponse = `I have scanned the documents in the repository via the **@education** vector pipeline. Based on the uploaded context, here is the synthesized information you requested.\n\n*(Note: In a production environment, this is where the Python backend injects the concatenated string from \`app/services/rag.py\` before sending to the LLM).*`;
+                } else {
+                    rawResponse = `Here is the response to your query regarding: *"${promptText.substring(0, 30)}..."*\n\n### Code Execution\nIf you asked for code, you can open the **Terminal** above to execute it live using Pyodide in your browser.\n\n\`\`\`python\ndef example():\n    print("Hello from Pratham AI")\n\`\`\``;
+                }
+
+                // Simulate token-by-token streaming
+                const chunks = rawResponse.match(/.{1,4}/g) || [];
+                
+                for (const chunk of chunks) {
+                    accumulatedResponse += chunk;
+                    // Sanitize and parse markdown on every tick
+                    streamTarget.innerHTML = DOMPurify.sanitize(marked.parse(accumulatedResponse));
+                    scrollToBottom();
+                    // Artificial network latency
+                    await new Promise(r => setTimeout(r, 15 + Math.random() * 20)); 
+                }
+
+            } catch (err) {
+                streamTarget.innerHTML = `<span style="color: var(--status-error);">Connection failed. Ensure the Flask server is running at API_BASE.</span>`;
+            } finally {
+                streamTarget.classList.remove('cursor-blink');
+                
+                // Apply Syntax Highlighting to newly generated code blocks
+                streamTarget.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+
+                AppState.isGenerating = false;
+                DOM.mainTextInput.focus();
+                handleComposerInput(); // Re-evaluate button state
+            }
+        }
+
+        // --- 9. Terminal (Pyodide Subsystem) ---
+        function toggleTerminalPanel() {
+            const isOpening = !DOM.terminalPanel.classList.contains('is-open');
+            
+            if (isOpening) {
+                DOM.terminalPanel.classList.add('is-open');
+                DOM.terminalPanel.setAttribute('aria-hidden', 'false');
+                DOM.btnToggleTerminal.classList.add('is-active');
+                
+                if (!AppState.pyodideReady) {
+                    initializePyodideEnv();
+                } else {
+                    DOM.termInputField.focus();
+                }
+            } else {
+                DOM.terminalPanel.classList.remove('is-open');
+                DOM.terminalPanel.setAttribute('aria-hidden', 'true');
+                DOM.btnToggleTerminal.classList.remove('is-active');
+            }
+        }
+
+        async function initializePyodideEnv() {
+            appendTerminalOutput('\n<span class="t-sys">[System] Downloading WASM Python engine... (This takes a moment on first load)</span>');
+            
+            try {
+                // loadPyodide is available globally from the CDN script tag
+                window.pyodide = await loadPyodide();
+                
+                // Route Python's stdout/stderr to our custom DOM element
+                window.pyodide.runPython(`
+import sys
+import io
+
+class WebConsole(io.StringIO):
+    def __init__(self, is_error=False):
+        super().__init__()
+        self.is_error = is_error
+        
+    def write(self, s):
+        # We handle the writing in JS by reading the buffer
+        super().write(s)
+
+sys.stdout = WebConsole()
+sys.stderr = WebConsole(is_error=True)
+                `);
+                
+                AppState.pyodideReady = true;
+                appendTerminalOutput('\n<span class="t-ok">[System] Pyodide initialized successfully. Python 3.11 ready.</span>\n');
+                DOM.termInputField.focus();
+            } catch (err) {
+                appendTerminalOutput(`\n<span class="t-err">[Error] Pyodide failed to load: ${err.message}</span>\n`);
+            }
+        }
+
+        function appendTerminalOutput(htmlStr) {
+            DOM.termOutputDisplay.innerHTML += htmlStr;
+            DOM.termOutputDisplay.scrollTop = DOM.termOutputDisplay.scrollHeight;
+        }
+
+        async function handleTerminalInput(e) {
+            if (e.key === 'Enter') {
+                const code = e.target.value.trim();
+                if (!code) return;
+
+                e.target.value = '';
+                appendTerminalOutput(`\n<span class="term-prompt-symbol">>>></span> <span class="t-cmd">${code}</span>\n`);
+
+                if (!AppState.pyodideReady) {
+                    appendTerminalOutput('<span class="t-err">Error: Python engine is not loaded yet.</span>');
+                    return;
+                }
+
+                try {
+                    // Clear previous buffers inside python
+                    window.pyodide.runPython("sys.stdout.seek(0); sys.stdout.truncate(0)");
+                    window.pyodide.runPython("sys.stderr.seek(0); sys.stderr.truncate(0)");
+                    
+                    // Execute async
+                    await window.pyodide.runPythonAsync(code);
+                    
+                    // Fetch results from buffers
+                    const out = window.pyodide.runPython("sys.stdout.getvalue()");
+                    const err = window.pyodide.runPython("sys.stderr.getvalue()");
+                    
+                    if (out) appendTerminalOutput(`<span class="t-ok">${out}</span>`);
+                    if (err) appendTerminalOutput(`<span class="t-err">${err}</span>`);
+                    
+                } catch (pythonError) {
+                    // Handle syntax errors or exceptions thrown directly by execution
+                    appendTerminalOutput(`<span class="t-err">${pythonError.toString()}</span>\n`);
+                }
+            }
+        }
+
+        // --- 10. Boot ---
+        document.addEventListener('DOMContentLoaded', initApp);
+
+    </script>
 </body>
 </html>
