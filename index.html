@@ -2092,26 +2092,13 @@ sys.stderr = WebConsole(is_error=True)
                             }
                         }
                     } else {
-                        throw new Error("STREAM_DISCONNECTED");
+                        const errPayload = await sseResponse.json().catch(() => ({}));
+                        throw new Error(errPayload.error || `HTTP System Failure Response: Status Code [${sseResponse.status}]`);
                     }
                 } catch (err) {
-                    console.warn("Shifting computing workload directly to local system runtime engines.", err);
-                    streamTarget.textContent = "";
-                    let standardResponseOutput = `I am ready to assist you. Please provide the precise parameters for optimization or architecture validation.`;
-                    
-                    if (promptText.toLowerCase().includes("hi") || promptText.toLowerCase() === "hii") {
-                        standardResponseOutput = `Hello! I am Pratham AI. I am here to help you debug code, analyze algorithms, or handle processing tasks efficiently. What are we building today?`;
-                    } else if (promptText.toLowerCase().includes("time complexity")) {
-                        standardResponseOutput = `Analyzing the execution profiles of processing threads requires calculating operational growth bounds. Single iteration structures maintain a linear complexity of $\\mathcal{O}(N)$, while layered operational arrays shift to a nested quadratic growth factor of $\\mathcal{O}(N^2)$.`;
-                    }
-
-                    const fallbackChunks = standardResponseOutput.match(/.{1,4}/g) || [];
-                    for (const chunk of fallbackChunks) {
-                        accumulatedResponse += chunk;
-                        streamTarget.innerHTML = DOMPurify.sanitize(marked.parse(accumulatedResponse));
-                        scrollToBottom();
-                        await new Promise(r => setTimeout(r, 15));
-                    }
+                    console.warn("Exposing server infrastructure exception log details via client window.", err);
+                    streamTarget.classList.remove('cursor-blink');
+                    streamTarget.innerHTML = `<span style="color: var(--status-error); font-family: var(--font-mono); font-size: 13px;">[CRITICAL TRANSACTION EXCEPTION]: ${err.message}</span>`;
                 } finally {
                     streamTarget.classList.remove('cursor-blink');
                     streamTarget.querySelectorAll('pre code').forEach((block) => { hljs.highlightElement(block); });
